@@ -1,8 +1,8 @@
 # Easy Case Law Backend
 
-무료 전용 FastAPI MVP입니다.
+Free-only FastAPI MVP for Korean case-law search and easy explanations.
 
-이 백엔드는 외부 유료 LLM, 유료 임베딩 API, 유료 벡터 DB, 유료 판례 API를 사용하지 않습니다.
+This backend does not use paid LLM APIs, paid embedding APIs, paid vector databases, or paid case-data APIs.
 
 ## Run
 
@@ -11,6 +11,8 @@ cd backend
 python -m pip install -r requirements.txt
 python -m uvicorn app.main:app --reload
 ```
+
+On startup, the app creates the SQLite tables and loads `data/sample_cases.json` into the local database.
 
 Swagger:
 

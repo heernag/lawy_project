@@ -2,6 +2,8 @@
 
 This MVP uses only `MVP sample data` from `data/sample_cases.json`.
 
+On application startup, the sample JSON is loaded into SQLite through the repository layer. API services then read cases through the configured case provider rather than inventing or fetching external cases.
+
 The sample data is for development and testing. It does not claim to be an official court judgment, and sample case numbers are intentionally marked as sample IDs.
 
 The backend does not crawl websites.
