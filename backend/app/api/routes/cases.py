@@ -1,11 +1,24 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from app.core.errors import CASE_NOT_FOUND
+from app.core.errors import CASE_NOT_FOUND, INVALID_REQUEST
 from app.core.responses import api_error, api_success
+from app.schemas.case_analysis import CaseAnalysisRequest
+from app.services.case_analysis_service import CaseAnalysisService
 from app.services.case_detail_service import CaseDetailService
 
 router = APIRouter()
+
+
+@router.post("/cases/analyze")
+def analyze_case(request: CaseAnalysisRequest):
+    query = request.query.strip()
+    if not query or len(query) > 2000:
+        return JSONResponse(
+            status_code=400,
+            content=api_error(INVALID_REQUEST, "사건 설명은 1자 이상 2000자 이하로 입력해야 합니다."),
+        )
+    return api_success(CaseAnalysisService().analyze(query).model_dump())
 
 
 @router.get("/cases/{case_id}")
