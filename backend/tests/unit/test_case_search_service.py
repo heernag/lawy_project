@@ -19,3 +19,12 @@ def test_search_filters_by_category():
 
     assert result.total_count == 1
     assert result.results[0].case_id == "sample-003"
+
+
+def test_search_filters_by_decision_date_range():
+    request = CaseSearchRequest(query="샘플", start_date="2024-01-01", end_date="2024-12-31", page=1, size=10)
+
+    result = CaseSearchService().search(request)
+
+    assert result.total_count == 1
+    assert result.results[0].case_id == "sample-002"

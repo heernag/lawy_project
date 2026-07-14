@@ -20,8 +20,12 @@ class CaseSearchService:
             "category": request.category,
             "court_name": request.court,
             "judgment_result": request.judgment_result,
+            "start_date": request.start_date,
+            "end_date": request.end_date,
         }
-        cases = self.provider.search_cases("", filters)
+        provider_filters = {key: value for key, value in filters.items() if key not in {"start_date", "end_date"}}
+        cases = self.provider.search_cases("", provider_filters)
+        cases = self._filter_by_date(cases, request.start_date, request.end_date)
         exact_matches = [case for case in cases if self._normalize(case.get("case_number", "")) == self._normalize(request.query)]
         scored_cases = exact_matches if exact_matches else self._score_cases(request.query, cases)
 
@@ -86,3 +90,18 @@ class CaseSearchService:
 
     def _normalize(self, value: str) -> str:
         return "".join(value.split()).lower()
+
+    def _filter_by_date(self, cases: list[dict[str, Any]], start_date: str | None, end_date: str | None) -> list[dict[str, Any]]:
+        if not start_date and not end_date:
+            return cases
+        result = []
+        for case in cases:
+            decision_date = case.get("decision_date")
+            if not decision_date:
+                continue
+            if start_date and decision_date < start_date:
+                continue
+            if end_date and decision_date > end_date:
+                continue
+            result.append(case)
+        return result
