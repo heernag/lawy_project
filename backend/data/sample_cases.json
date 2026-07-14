@@ -1,0 +1,50 @@
+[
+  {
+    "case_id": "sample-001",
+    "case_number": "샘플-사건번호-001",
+    "case_name": "중고 노트북 매매계약 하자 샘플 사건",
+    "court_name": "샘플 법원",
+    "court_department": "샘플 민사부",
+    "decision_date": "2025-03-01",
+    "category": "민사",
+    "judgment_result": "일부 인용",
+    "order_text": "피고는 원고에게 5,000,000원 및 이에 대하여 2025년 3월 1일부터 다 갚는 날까지 연 12%의 비율로 계산한 돈을 지급하라.",
+    "original_text": "주문\n피고는 원고에게 5,000,000원 및 이에 대하여 2025년 3월 1일부터 다 갚는 날까지 연 12%의 비율로 계산한 돈을 지급하라.\n이유\n원고는 중고 노트북을 정상 제품이라고 설명받고 구매하였다.\n인정 사실\n수령 후 노트북 전원이 켜지지 않았고, 피고는 환불을 거부하였다.\n법원의 판단\n매매 목적물에 하자가 있고 환불 거부로 인한 손해배상 책임이 인정된다.\n결론\n원고의 청구를 일부 인용한다.",
+    "summary": "중고 노트북 하자와 환불 거부에 관한 샘플 사건입니다.",
+    "main_issues": ["매매 목적물의 하자", "계약 해제", "손해배상"],
+    "source_name": "MVP sample data",
+    "source_url": ""
+  },
+  {
+    "case_id": "sample-002",
+    "case_number": "샘플-사건번호-002",
+    "case_name": "전세보증금 반환 샘플 사건",
+    "court_name": "샘플 법원",
+    "court_department": "샘플 민사부",
+    "decision_date": "2024-10-15",
+    "category": "민사",
+    "judgment_result": "인용",
+    "order_text": "피고는 원고에게 보증금 30,000,000원을 반환하라.",
+    "original_text": "주문\n피고는 원고에게 보증금 30,000,000원을 반환하라.\n이유\n원고는 임대차계약 종료 후에도 보증금을 돌려받지 못하였다.\n법원의 판단\n임대차계약이 종료되었으므로 피고는 보증금을 반환할 의무가 있다.",
+    "summary": "임대차계약 종료 후 전세보증금 반환에 관한 샘플 사건입니다.",
+    "main_issues": ["임대차계약 종료", "보증금 반환"],
+    "source_name": "MVP sample data",
+    "source_url": ""
+  },
+  {
+    "case_id": "sample-003",
+    "case_number": "샘플-사건번호-003",
+    "case_name": "임금 미지급 샘플 사건",
+    "court_name": "샘플 법원",
+    "court_department": "샘플 노동부",
+    "decision_date": "2023-08-20",
+    "category": "노동",
+    "judgment_result": "일부 인용",
+    "order_text": "피고는 원고에게 미지급 임금 2,000,000원을 지급하라.",
+    "original_text": "주문\n피고는 원고에게 미지급 임금 2,000,000원을 지급하라.\n이유\n원고는 근로를 제공하였으나 일부 임금을 지급받지 못하였다.\n법원의 판단\n피고는 원고에게 미지급 임금을 지급할 의무가 있다.",
+    "summary": "근로 제공 후 임금을 지급받지 못한 샘플 사건입니다.",
+    "main_issues": ["임금 미지급", "근로계약"],
+    "source_name": "MVP sample data",
+    "source_url": ""
+  }
+]
