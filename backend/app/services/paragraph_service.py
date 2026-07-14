@@ -1,6 +1,4 @@
 from dataclasses import asdict, dataclass
-from uuid import uuid4
-
 
 @dataclass
 class ParagraphResult:
@@ -65,14 +63,14 @@ class ParagraphService:
     def _build_section(self, section_order: int, heading: str, lines: list[str]) -> SectionResult:
         paragraphs = [
             ParagraphResult(
-                paragraph_id=f"paragraph-{uuid4().hex}",
+                paragraph_id=f"paragraph-{section_order}-{index}",
                 paragraph_order=index,
                 original_text=line,
             )
             for index, line in enumerate(lines, start=1)
         ]
         return SectionResult(
-            section_id=f"section-{uuid4().hex}",
+            section_id=f"section-{section_order}",
             section_type=heading,
             section_order=section_order,
             original_text="\n".join(lines),

@@ -5,11 +5,13 @@ from app.core.errors import CASE_NOT_FOUND, INVALID_REQUEST
 from app.core.responses import api_error, api_success
 from app.schemas.case_analysis import CaseAnalysisRequest
 from app.schemas.search import CaseSearchRequest
+from app.schemas.simplification import SimplificationRequest
 from app.schemas.summary import SummaryRequest
 from app.services.case_analysis_service import CaseAnalysisService
 from app.services.case_detail_service import CaseDetailService
 from app.services.case_search_service import CaseSearchService
 from app.services.legal_term_service import LegalTermService
+from app.services.simplification_service import SimplificationService
 from app.services.summary_service import SummaryService
 
 router = APIRouter()
@@ -86,5 +88,38 @@ def summarize_case(case_id: str, request: SummaryRequest):
         return JSONResponse(
             status_code=404,
             content=api_error(CASE_NOT_FOUND, "판결문을 찾을 수 없습니다."),
+        )
+    return api_success(result)
+
+
+@router.post("/cases/{case_id}/simplify")
+def simplify_case(case_id: str, request: SimplificationRequest):
+    result = SimplificationService().simplify_case(case_id, request.section_types, request.force_regenerate)
+    if result is None:
+        return JSONResponse(
+            status_code=404,
+            content=api_error(CASE_NOT_FOUND, "판결문을 찾을 수 없습니다."),
+        )
+    return api_success(result)
+
+
+@router.get("/cases/{case_id}/simplified")
+def get_simplified_case(case_id: str):
+    result = SimplificationService().get_simplified_case(case_id)
+    if result is None:
+        return JSONResponse(
+            status_code=404,
+            content=api_error(CASE_NOT_FOUND, "판결문을 찾을 수 없습니다."),
+        )
+    return api_success(result)
+
+
+@router.post("/cases/{case_id}/paragraphs/{paragraph_id}/simplify")
+def simplify_single_paragraph(case_id: str, paragraph_id: str):
+    result = SimplificationService().simplify_paragraph(case_id, paragraph_id)
+    if result is None:
+        return JSONResponse(
+            status_code=404,
+            content=api_error(CASE_NOT_FOUND, "판결문 또는 문단을 찾을 수 없습니다."),
         )
     return api_success(result)
