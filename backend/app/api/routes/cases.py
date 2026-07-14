@@ -5,9 +5,12 @@ from app.core.errors import CASE_NOT_FOUND, INVALID_REQUEST
 from app.core.responses import api_error, api_success
 from app.schemas.case_analysis import CaseAnalysisRequest
 from app.schemas.search import CaseSearchRequest
+from app.schemas.summary import SummaryRequest
 from app.services.case_analysis_service import CaseAnalysisService
 from app.services.case_detail_service import CaseDetailService
 from app.services.case_search_service import CaseSearchService
+from app.services.legal_term_service import LegalTermService
+from app.services.summary_service import SummaryService
 
 router = APIRouter()
 
@@ -64,3 +67,24 @@ def get_similar_cases(case_id: str):
             content=api_error(CASE_NOT_FOUND, "판결문을 찾을 수 없습니다."),
         )
     return api_success(result.model_dump())
+
+
+@router.get("/cases/{case_id}/legal-terms")
+def get_case_legal_terms(case_id: str):
+    if CaseDetailService().get_case_detail(case_id) is None:
+        return JSONResponse(
+            status_code=404,
+            content=api_error(CASE_NOT_FOUND, "판결문을 찾을 수 없습니다."),
+        )
+    return api_success({"case_id": case_id, "terms": LegalTermService().extract_terms(case_id)})
+
+
+@router.post("/cases/{case_id}/summary")
+def summarize_case(case_id: str, request: SummaryRequest):
+    result = SummaryService().summarize(case_id, request.force_regenerate)
+    if result is None:
+        return JSONResponse(
+            status_code=404,
+            content=api_error(CASE_NOT_FOUND, "판결문을 찾을 수 없습니다."),
+        )
+    return api_success(result)
