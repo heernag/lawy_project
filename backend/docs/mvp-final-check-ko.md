@@ -21,7 +21,7 @@
 
 ```text
 python -m pytest -q
-85 passed, 1 warning
+87 passed, 1 warning
 ```
 
 README 기준 실행 검증:
@@ -62,7 +62,7 @@ Easy Case Law Backend
 | 프론트 연동 문서 | 완료 | `frontend-integration.md`, `frontend-flow-ko.md` |
 | Bruno 테스트 컬렉션 | 완료 | `backend/bruno` |
 | README 실행 가이드 | 완료 | README 갱신 및 테스트 명령 검증 |
-| 모든 변경 커밋 | 완료 | `a56ed3d`, `4cabfd2`, `1aa029f` |
+| 모든 변경 커밋 | 완료 | 최근 작업은 장 단위 커밋으로 정리됨 |
 
 ## 커밋 완료 내역
 
@@ -71,13 +71,16 @@ Easy Case Law Backend
 - `a56ed3d feat: add free local hash embeddings`
 - `4cabfd2 docs: verify README local setup`
 - `1aa029f docs: add frontend handoff checklist`
+- `4641046 docs: update final MVP checklist`
+- `759ee3a docs: expand official data source review policy`
+- `23c1cf4 test: add address masking false positive fixtures`
+- `docs: refresh korean progress notes`
 
-커밋 후 전체 테스트도 다시 통과했습니다.
+커밋 전 전체 테스트도 다시 통과했습니다.
 
 ## 남은 필수 작업
 
-1. 이 최종 점검표 갱신 내용을 커밋한다.
-2. 필요하면 완전히 새 환경에서 의존성 설치부터 재검증한다.
+1. 필요하면 완전히 새 환경에서 의존성 설치부터 재검증한다.
 
 ## 남은 선택 작업
 
@@ -91,5 +94,5 @@ Easy Case Law Backend
 
 ## 최종 한 줄
 
-현재 상태는 “무료 백엔드 MVP 기능은 거의 완료되었고, 남은 것은 최종 문서 커밋과
-선택적 새 환경 재검증”입니다.
+현재 상태는 “무료 백엔드 MVP 기능은 거의 완료되었고, 남은 것은 선택적 새 환경
+재검증과 안정화 fixture 보강”입니다.

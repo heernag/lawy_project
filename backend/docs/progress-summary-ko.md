@@ -144,24 +144,25 @@
 현재 확인된 테스트 결과:
 
 ```text
-85 passed, 1 warning
+python -m pytest -q
+87 passed, 1 warning
 ```
 
 경고 1개는 기존 FastAPI/Starlette TestClient 관련 경고입니다.
 
 ## Git 상태
 
-마지막 커밋:
-
-- `a120ebf refactor: move health diagnostics into service`
-
 최근 추가 커밋:
 
 - `a56ed3d feat: add free local hash embeddings`
 - `4cabfd2 docs: verify README local setup`
 - `1aa029f docs: add frontend handoff checklist`
+- `4641046 docs: update final MVP checklist`
+- `759ee3a docs: expand official data source review policy`
+- `23c1cf4 test: add address masking false positive fixtures`
+- `docs: refresh korean progress notes`
 
-이전 커밋 시도는 Codex 사용량 제한 때문에 Git 스테이징 단계에서 막혔습니다.
+최신 커밋 해시는 `git log --oneline -n 1` 기준으로 확인합니다.
 
 ## 남은 작업량
 
@@ -173,7 +174,7 @@
 
 ### 반드시 해야 하는 것
 
-- 최종 전체 테스트 실행
+- 선택적 새 환경 재검증
 
 ### 하면 좋은 것
 

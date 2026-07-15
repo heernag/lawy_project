@@ -187,15 +187,40 @@ python -m pytest tests\unit\test_case_analysis_service.py::test_analyze_masks_cl
 4 passed
 ```
 
-## 현재 미커밋 작업
+커밋:
 
-- `backend/app/services/case_analysis_service.py`
-- `backend/docs/mvp-final-check-ko.md`
+- `23c1cf4 test: add address masking false positive fixtures`
+
+전체 검증:
+
+```text
+python -m pytest -q
+87 passed, 1 warning
+```
+
+### 10. 진행 문서 최신화
+
+수정한 문서:
+
 - `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
-- `backend/tests/unit/test_case_analysis_service.py`
+- `backend/docs/mvp-final-check-ko.md`
+
+작업 내용:
+
+- 최신 테스트 결과를 `87 passed, 1 warning`으로 갱신했다.
+- 최신 커밋 `23c1cf4`를 반영했다.
+- 이미 커밋된 작업을 “미커밋 작업”으로 표시하던 낡은 문구를 정리했다.
+
+커밋:
+
+- `docs: refresh korean progress notes`
+
+## 현재 미커밋 작업
+
+- 없음
 
 ## 다음에 이어서 할 작업
 
-1. 주소 마스킹 fixture 보강 작업을 커밋한다.
-2. 필요 시 완전히 새 환경에서 의존성 설치부터 재검증한다.
+1. 필요 시 완전히 새 환경에서 의존성 설치부터 재검증한다.
+2. 실제 공개 판결문 형식 기반 섹션 분리 fixture를 추가한다.
