@@ -66,7 +66,7 @@ python -m pytest -v
 Current verified result:
 
 ```text
-93 passed, 1 warning
+94 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

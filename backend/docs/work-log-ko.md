@@ -342,14 +342,35 @@ Easy Case Law Backend
 /api/cases/search: True
 ```
 
+### 15. 최종 코드리뷰 문서 최신화
+
+수정/생성한 파일:
+
+- `backend/docs/code-review-notes.md`
+- `backend/docs/code-review-notes-ko.md`
+- `backend/docs/progress-summary-ko.md`
+- `backend/docs/work-log-ko.md`
+- `backend/docs/mvp-final-check-ko.md`
+
+작업 내용:
+
+- 기존 코드리뷰 문서의 오래된 테스트 결과를 최신 `94 passed, 1 warning`으로 갱신했다.
+- 최근 챕터인 프론트 인계 문서, 공식 데이터 출처 정책, 형사/행정 섹션 fixture, TypeScript 계약 예시, OpenAPI 계약 테스트, README 시작 가이드 점검 내용을 코드리뷰 문서에 추가했다.
+- 사용자 확인용 한국어 최종 코드리뷰 문서 `code-review-notes-ko.md`를 추가했다.
+- 남은 리스크를 새 환경 의존성 설치 검증, 공식 데이터 provider 미구현, 실제 판결문 fixture 확대, Alembic 운영 정리로 정리했다.
+- 리뷰 피드백에 따라 OpenAPI 공통 응답 문서화를 전체 핵심 공개 경로로 확장했다.
+- 리뷰 피드백에 따라 `SIMILARITY_MODE` 설정을 검색 서비스에서 실제로 검증하도록 연결했다.
+- 리뷰 피드백에 따라 API 체크리스트의 테스트 수치를 최신값으로 맞췄다.
+
 ## 이번 챕터 변경 파일
 
-- `backend/README.md`
+- `backend/docs/code-review-notes.md`
+- `backend/docs/code-review-notes-ko.md`
 - `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
 - `backend/docs/mvp-final-check-ko.md`
 
 ## 다음에 이어서 할 작업
 
-1. 최종 코드리뷰 문서를 최신 커밋 기준으로 갱신한다.
-2. 마지막 전체 테스트와 Git 상태를 확인한다.
+1. 마지막 전체 테스트와 Git 상태를 확인한다.
+2. 최종 완료 여부를 요구사항별로 감사한다.

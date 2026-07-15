@@ -12,8 +12,8 @@
 
 현재 추정:
 
-- 완료율: 약 95%
-- 남은 작업: 약 5%
+- 완료율: 약 97%
+- 남은 작업: 약 3%
 
 ## 검증 결과
 
@@ -21,20 +21,22 @@
 
 ```text
 python -m pytest -q
-93 passed, 1 warning
+94 passed, 1 warning
 ```
 
 README 기준 실행 검증:
 
 ```text
 python -m pytest -v
-85 passed, 1 warning
+94 passed, 1 warning
 ```
 
 앱 생성 확인:
 
 ```text
 Easy Case Law Backend
+/api/health: True
+/api/cases/search: True
 ```
 
 ## 완료 조건별 점검
@@ -60,6 +62,7 @@ Easy Case Law Backend
 | CORS 설정 | 완료 | CORS integration test |
 | `.env` Git 제외 | 완료 | `.env.example`만 제공 |
 | 프론트 연동 문서 | 완료 | `frontend-integration.md`, `frontend-flow-ko.md`, TypeScript 계약 예시 테스트 |
+| 코드리뷰 문서 | 완료 | `code-review-notes.md`, `code-review-notes-ko.md` |
 | Bruno 테스트 컬렉션 | 완료 | `backend/bruno` |
 | README 실행 가이드 | 완료 | README 갱신, 헬스 체크/검색 예시 추가, 테스트 명령 검증 |
 | 모든 변경 커밋 | 완료 | 최근 작업은 장 단위 커밋으로 정리됨 |
@@ -78,12 +81,13 @@ Easy Case Law Backend
 - `test: add judgment section heading fixtures`
 - `docs: lock frontend TypeScript contract examples`
 - `test: add OpenAPI contract checks`
+- `docs: verify README startup guide`
 
 커밋 전 전체 테스트도 다시 통과했습니다.
 
 ## 남은 필수 작업
 
-1. 필요하면 완전히 새 환경에서 의존성 설치부터 재검증한다.
+1. 마지막 전체 테스트와 Git 상태를 확인한다.
 
 ## 남은 선택 작업
 
@@ -98,4 +102,4 @@ Easy Case Law Backend
 ## 최종 한 줄
 
 현재 상태는 “무료 백엔드 MVP 기능은 거의 완료되었고, 남은 것은 선택적 새 환경
-재검증과 안정화 fixture 보강”입니다.
+재검증과 최종 감사”입니다.

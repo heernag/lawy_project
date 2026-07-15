@@ -42,13 +42,30 @@ def test_openapi_documents_common_api_response_schemas():
     assert set(schemas["ApiResponse"]["properties"].keys()) == {"success", "data", "error"}
 
 
-def test_openapi_documents_standard_error_responses_for_case_lookup():
+def test_openapi_documents_common_responses_for_core_routes():
     client = TestClient(create_app())
 
     response = client.get("/openapi.json")
 
     assert response.status_code == 200
-    operation = response.json()["paths"]["/api/cases/{case_id}"]["get"]
+    paths = response.json()["paths"]
+    expected_operations = [
+        ("/api/health", "get", []),
+        ("/api/cases/analyze", "post", ["400"]),
+        ("/api/cases/search", "post", ["400"]),
+        ("/api/cases/{case_id}", "get", ["404"]),
+        ("/api/cases/{case_id}/sections", "get", ["404"]),
+        ("/api/cases/{case_id}/summary", "post", ["404"]),
+        ("/api/cases/{case_id}/simplify", "post", ["404"]),
+        ("/api/cases/{case_id}/simplified", "get", ["404"]),
+        ("/api/cases/{case_id}/paragraphs/{paragraph_id}/simplify", "post", ["404"]),
+        ("/api/legal-terms/{term}", "get", ["404"]),
+        ("/api/cases/{case_id}/legal-terms", "get", ["404"]),
+        ("/api/cases/{case_id}/similar", "get", ["404"]),
+    ]
 
-    assert operation["responses"]["200"]["content"]["application/json"]["schema"]["$ref"] == "#/components/schemas/ApiResponse"
-    assert operation["responses"]["404"]["content"]["application/json"]["schema"]["$ref"] == "#/components/schemas/ApiResponse"
+    for path, method, error_statuses in expected_operations:
+        operation = paths[path][method]
+        assert operation["responses"]["200"]["content"]["application/json"]["schema"]["$ref"] == "#/components/schemas/ApiResponse"
+        for status_code in error_statuses:
+            assert operation["responses"][status_code]["content"]["application/json"]["schema"]["$ref"] == "#/components/schemas/ApiResponse"

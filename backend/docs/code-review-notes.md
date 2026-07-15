@@ -26,9 +26,12 @@ Overall direction is sound for the requested MVP:
 - Frontend integration docs now include concrete validation error examples,
   including production-like responses where validation details are hidden.
 - Address masking now has an explicit false-positive test for road-name text
-  followed by an amount expression.
+  followed by an amount expression or sequence-number expression.
 - Paragraph sectioning now recognizes appeal and supreme-court procedure
   headings such as `항소취지`, `항소이유`, and `상고이유`.
+- Paragraph sectioning also recognizes fixture-backed criminal and
+  administrative headings such as `범죄사실`, `증거의 요지`, `법령의 적용`,
+  `양형의 이유`, `처분의 경위`, `관계 법령`, and `판단`.
 - Error codes now have an exported `ALL_ERROR_CODES` contract and a
   frontend-facing reference table.
 - Health diagnostics now live in `HealthService` instead of being calculated
@@ -36,6 +39,13 @@ Overall direction is sound for the requested MVP:
 - Search similarity now has a free local hash-embedding provider in addition
   to keyword overlap.
 - README and `.env.example` now refer to the free local hash similarity mode.
+- Frontend TypeScript examples now include core search, detail, and
+  simplification response contracts, with a unit test guarding against
+  accidental removal.
+- OpenAPI now exposes common `ApiResponse` and `ApiError` schemas and has
+  integration tests for core frontend paths.
+- README startup instructions include local health/OpenAPI checks and a sample
+  search request.
 
 Main residual risks:
 
@@ -60,6 +70,8 @@ Main residual risks:
   the documented pytest command.
 - Existing sample text and some console output can appear garbled on Windows
   terminals if the shell encoding is not UTF-8, even when tests pass.
+- A fully fresh dependency installation on a clean machine was not repeated in
+  this local pass; the documented installed environment was verified.
 
 ## Chapter Reviews
 
@@ -379,7 +391,7 @@ Review notes:
 
 Related commits:
 
-- This chapter will be tracked by the next documentation commit.
+- `1aa029f docs: add frontend handoff checklist`
 
 What changed:
 
@@ -408,15 +420,20 @@ Review notes:
 
 Related commits:
 
-- This chapter will be tracked by the next feature commit.
+- `c6c06d0 feat: avoid address masking for amount expressions`
+- `23c1cf4 test: add address masking false positive fixtures`
 
 What changed:
 
 - Added a unit test proving that `서울시 강남구 테헤란로 123만 원` is not masked
   as an address.
+- Added a unit test proving that `서울시 강남구 테헤란로 3번 쟁점` is not masked
+  as an address.
 - Updated the road-address privacy pattern so a road-name number followed by a
   Korean amount expression such as `만 원` or `억 원` is not treated as an
   address number.
+- Updated the road-address privacy pattern so a road-name number followed by
+  `번` is treated as a sequence-number expression, not as a clear address.
 - Kept the existing clear road-address masking behavior intact.
 
 Why it matters:
@@ -439,7 +456,7 @@ Review notes:
 
 Related commits:
 
-- This chapter will be tracked by the next feature commit.
+- `67b2435 feat: recognize appeal procedure headings`
 
 What changed:
 
@@ -468,7 +485,7 @@ Review notes:
 
 Related commits:
 
-- This chapter will be tracked by the next feature commit.
+- `3e3b43c feat: expose stable error code contract`
 
 What changed:
 
@@ -499,7 +516,7 @@ Review notes:
 
 Related commits:
 
-- This chapter will be tracked by the next refactor commit.
+- `a120ebf refactor: move health diagnostics into service`
 
 What changed:
 
@@ -529,7 +546,7 @@ Review notes:
 
 Related commits:
 
-- This chapter will be tracked by the next feature commit.
+- `a56ed3d feat: add free local hash embeddings`
 
 What changed:
 
@@ -562,7 +579,8 @@ Review notes:
 
 Related commits:
 
-- This chapter will be tracked by the next documentation/config commit.
+- `4cabfd2 docs: verify README local setup`
+- `ba8b769 docs: verify README startup guide`
 
 What changed:
 
@@ -584,8 +602,177 @@ Review notes:
 - Good: The change keeps the project free-only and avoids paid embedding
   services.
 - Good: The README now points frontend developers to the Bruno and flow docs.
+- Good: `SIMILARITY_MODE=local_hash` is now validated by the search service;
+  unsupported modes fail fast instead of silently using a default.
 - Risk: A completely clean machine dependency install was not re-run because
   network/package installation is outside this local verification pass.
+
+### 19. Frontend Handoff Checklist And Bruno Collection
+
+Related commits:
+
+- `1aa029f docs: add frontend handoff checklist`
+
+What changed:
+
+- Added a Bruno collection under `backend/bruno` for local API checks.
+- Added Korean frontend screen-flow guidance in `frontend-flow-ko.md`.
+- Added API checklist documentation for implemented endpoints and frontend
+  expectations.
+
+Why it matters:
+
+- The frontend team can test the API without building request bodies from
+  scratch.
+- The flow guide clarifies that similarity scores are relevance signals, not
+  win/loss probabilities.
+
+Review notes:
+
+- Good: Handoff docs match the current free MVP and point to local endpoints.
+- Good: Error handling guidance tells the frontend to branch on `error.code`.
+- Risk: Bruno files are examples, not a substitute for automated API contract
+  tests; keep integration tests as the authoritative gate.
+
+### 20. Official Data Source Policy Review
+
+Related commits:
+
+- `759ee3a docs: expand official data source review policy`
+
+What changed:
+
+- Documented official data-source candidates such as National Law Information
+  Open Data and Korean Court judgment reading pages.
+- Recorded that storage, redistribution, source display, commercial use, and
+  original-text display conditions must be confirmed before implementing a real
+  provider.
+- Reaffirmed that MVP uses sample data and must not crawl restricted pages.
+
+Why it matters:
+
+- It protects the project from quietly drifting into unauthorized crawling or
+  unverified redistribution.
+- It preserves the provider boundary for a later official integration.
+
+Review notes:
+
+- Good: The policy is explicit that unknown terms block provider
+  implementation.
+- Good: Public provider work remains future work, not hidden MVP behavior.
+- Risk: Before production with real cases, a fresh source/license review is
+  still mandatory.
+
+### 21. Judgment Section Heading Fixtures
+
+Related commits:
+
+- `6243972 test: add judgment section heading fixtures`
+
+What changed:
+
+- Added fixture coverage for criminal judgment headings:
+  `범죄사실`, `증거의 요지`, `법령의 적용`, `양형의 이유`.
+- Added fixture coverage for administrative judgment headings:
+  `처분의 경위`, `관계 법령`, `판단`.
+- Normalized those headings to existing section labels where useful.
+
+Why it matters:
+
+- Section splitting is central to paragraph-level simplification and frontend
+  display.
+- More fixture-backed headings reduce the chance that realistic public
+  judgment formats collapse into a single `원문` section.
+
+Review notes:
+
+- Good: The change followed red-green TDD with failing tests first.
+- Good: Normalization reuses existing frontend-friendly labels.
+- Risk: The splitter is still heuristic and should keep growing through
+  concrete fixtures, not broad pattern guesses.
+
+### 22. Frontend TypeScript Contract Examples
+
+Related commits:
+
+- `ed1c273 docs: lock frontend TypeScript contract examples`
+
+What changed:
+
+- Added `CaseSearchResponse`, `CaseDetailResponse`,
+  `SimplificationRequest`, `SimplifiedParagraph`, and
+  `SimplifiedCaseResponse` TypeScript examples.
+- Updated the fetch example to type the search response as
+  `ApiResponse<CaseSearchResponse>`.
+- Added a unit test that fails if core frontend response type snippets are
+  accidentally removed from the guide.
+
+Why it matters:
+
+- The frontend team gets response-level contracts, not only item-level types.
+- Manual docs now have a lightweight automated guard.
+
+Review notes:
+
+- Good: Type examples use `snake_case`, matching backend JSON.
+- Good: The docs reflect common response wrapping with `ApiResponse<T>`.
+- Risk: The TypeScript examples are still manually maintained. Generated
+  clients from OpenAPI could reduce duplication later.
+
+### 23. OpenAPI Contract Checks
+
+Related commits:
+
+- `86e2736 test: add OpenAPI contract checks`
+
+What changed:
+
+- Added integration tests that `/openapi.json` exposes core frontend paths.
+- Added Pydantic `ApiResponse` and `ApiError` models for OpenAPI components.
+- Documented `GET /api/cases/{case_id}` 200 and 404 responses with the common
+  response schema.
+
+Why it matters:
+
+- Swagger/OpenAPI now better reflects the project-wide common response shape.
+- Frontend contract drift is more likely to be caught by tests.
+
+Review notes:
+
+- Good: The tests verify real generated OpenAPI output through `TestClient`.
+- Good: The runtime JSON response shape stayed unchanged.
+- Good: Core frontend routes now have explicit common `ApiResponse` metadata
+  for 200 responses and expected 400/404 error responses.
+- Risk: `ApiResponse.data` is intentionally generic in OpenAPI for the MVP.
+  Generated clients may still want endpoint-specific response wrappers later.
+
+### 24. README Startup Guide Verification
+
+Related commits:
+
+- `ba8b769 docs: verify README startup guide`
+
+What changed:
+
+- Added local health and OpenAPI quick-check commands to README.
+- Added a representative search API request example.
+- Updated README with the latest verified test result:
+  `94 passed, 1 warning`.
+- Re-verified app creation and core OpenAPI paths from the documented backend
+  environment.
+
+Why it matters:
+
+- A new developer can run the backend, check readiness, and try a search call
+  with fewer missing steps.
+- The README now reflects the current verified state.
+
+Review notes:
+
+- Good: README remains free-only and avoids paid API setup instructions.
+- Good: Quick checks are simple enough for handoff.
+- Risk: Fresh dependency installation on a brand-new machine was not performed
+  because package installation may require network access.
 
 ## Cross-Cutting Review
 
@@ -632,13 +819,15 @@ The test suite has grown chapter by chapter and currently covers:
 - DB bootstrap and repository behavior
 - CORS
 - Full flow
+- Frontend TypeScript documentation snippets
+- OpenAPI core path and common response schema contracts
 
 Review recommendation:
 
 - Keep adding tests before every behavior change.
 - Add more fixture-based tests before supporting real public judgment formats.
-- Add explicit tests for malformed JSON and missing required fields if the
-  frontend begins relying heavily on exact validation messages.
+- Keep malformed JSON and missing required field tests focused on stable
+  `error.code`, not exact framework detail text.
 
 ### Security And Privacy
 
@@ -675,15 +864,14 @@ Review recommendations:
 
 Recommended order:
 
-1. Commit the currently uncommitted free local hash search and documentation
-   work when Git write approval is available.
-2. Add more address positive/false-positive fixtures before widening masking.
-3. Add more section-splitting fixtures for court-procedure headings.
-4. Add a generated OpenAPI/TypeScript contract check if the frontend starts
+1. Add a generated OpenAPI/TypeScript contract check if the frontend starts
    depending on generated clients.
-5. Add migration/search-index freshness checks to `HealthService` if operations
+2. Add migration/search-index freshness checks to `HealthService` if operations
    needs deeper diagnostics.
-6. Add a stronger free local embedding backend only after dependency and
+3. Add more address positive/false-positive fixtures before widening masking.
+4. Add more section-splitting fixtures for additional real public judgment
+   formats.
+5. Add a stronger free local embedding backend only after dependency and
    runtime-size review.
 
 ## Verification Snapshot
@@ -691,8 +879,8 @@ Recommended order:
 Latest verification before this document was written:
 
 ```text
-python -m pytest -v
-85 passed, 1 warning
+python -m pytest -q
+94 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

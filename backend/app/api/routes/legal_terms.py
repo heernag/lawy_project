@@ -2,13 +2,13 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from app.core.errors import INVALID_REQUEST
-from app.core.responses import api_error, api_success
+from app.core.responses import ApiResponse, api_error, api_success
 from app.services.legal_term_service import LegalTermService
 
 router = APIRouter()
 
 
-@router.get("/legal-terms/{term}")
+@router.get("/legal-terms/{term}", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def get_legal_term(term: str):
     result = LegalTermService().get_term(term)
     if result is None:

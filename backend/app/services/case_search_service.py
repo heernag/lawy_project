@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any
 
+from app.core.config import get_settings
+from app.providers.base_case_provider import CaseProvider
 from app.providers.sample_case_provider import SampleCaseProvider
 from app.schemas.search import CaseSearchItem, CaseSearchRequest, CaseSearchResponse
 from app.services.local_similarity_service import LocalSimilarityService
@@ -9,11 +11,19 @@ from app.services.local_similarity_service import LocalSimilarityService
 class CaseSearchService:
     def __init__(
         self,
-        provider: SampleCaseProvider | None = None,
+        provider: CaseProvider | None = None,
         similarity_service: LocalSimilarityService | None = None,
+        similarity_mode: str | None = None,
     ):
         self.provider = provider or SampleCaseProvider(Path("data/sample_cases.json"))
-        self.similarity_service = similarity_service or LocalSimilarityService()
+        self.similarity_service = similarity_service or self._build_similarity_service(
+            similarity_mode or get_settings().similarity_mode
+        )
+
+    def _build_similarity_service(self, similarity_mode: str) -> LocalSimilarityService:
+        if similarity_mode == "local_hash":
+            return LocalSimilarityService()
+        raise ValueError(f"Unsupported similarity mode: {similarity_mode}")
 
     def search(self, request: CaseSearchRequest) -> CaseSearchResponse:
         filters = {

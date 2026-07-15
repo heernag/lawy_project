@@ -37,6 +37,7 @@
 - `.env.example` 작성
 - README 작성
 - README 기준 실행/테스트/헬스 체크 확인 절차 보강
+- 최종 코드리뷰 문서 작성
 - Swagger/OpenAPI 문서 제공
 
 ### 2. 판결문 데이터 저장
@@ -132,6 +133,7 @@
 - 프론트 연동 문서의 핵심 응답 타입 누락을 막는 테스트 추가
 - OpenAPI 핵심 경로 및 공통 응답 스키마 계약 테스트 추가
 - README 기준 `pytest`, 앱 생성, OpenAPI 경로 확인 재검증
+- 한국어 최종 코드리뷰 문서 추가
 - 검증 실패 응답 예시 작성
 - 전체 API 체크리스트 작성
 - Bruno 테스트 컬렉션 작성
@@ -153,7 +155,7 @@
 
 ```text
 python -m pytest -q
-93 passed, 1 warning
+94 passed, 1 warning
 ```
 
 경고 1개는 기존 FastAPI/Starlette TestClient 관련 경고입니다.
@@ -172,20 +174,22 @@ python -m pytest -q
 - `test: add judgment section heading fixtures`
 - `docs: lock frontend TypeScript contract examples`
 - `test: add OpenAPI contract checks`
+- `docs: verify README startup guide`
 
 최신 커밋 해시는 `git log --oneline -n 1` 기준으로 확인합니다.
 
 ## 남은 작업량
 
-백엔드 MVP 기준으로 약 95% 완료되었습니다.
+백엔드 MVP 기준으로 약 97% 완료되었습니다.
 
-남은 작업은 약 5%입니다.
+남은 작업은 약 3%입니다.
 
 ## 앞으로 남은 핵심 작업
 
 ### 반드시 해야 하는 것
 
-- 선택적 새 환경 재검증
+- 마지막 전체 테스트와 Git 상태 확인
+- 요구사항별 최종 감사
 
 ### 하면 좋은 것
 
@@ -203,4 +207,4 @@ python -m pytest -q
 
 ## 한 줄 요약
 
-현재 백엔드 MVP는 약 95% 완료, 남은 작업은 약 5%입니다.
+현재 백엔드 MVP는 약 97% 완료, 남은 작업은 약 3%입니다.

@@ -19,7 +19,7 @@ from app.services.summary_service import SummaryService
 router = APIRouter()
 
 
-@router.post("/cases/analyze")
+@router.post("/cases/analyze", response_model=ApiResponse, responses={400: {"model": ApiResponse}})
 def analyze_case(request: CaseAnalysisRequest):
     query = request.query.strip()
     if len(query) < 5 or len(query) > 2000:
@@ -30,7 +30,7 @@ def analyze_case(request: CaseAnalysisRequest):
     return api_success(CaseAnalysisService().analyze(query).model_dump())
 
 
-@router.post("/cases/search")
+@router.post("/cases/search", response_model=ApiResponse, responses={400: {"model": ApiResponse}})
 def search_cases(request: CaseSearchRequest, provider: CaseProvider = Depends(get_case_provider)):
     if not request.query.strip():
         return JSONResponse(
@@ -51,7 +51,7 @@ def get_case(case_id: str, provider: CaseProvider = Depends(get_case_provider)):
     return api_success(result)
 
 
-@router.get("/cases/{case_id}/sections")
+@router.get("/cases/{case_id}/sections", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def get_case_sections(case_id: str, provider: CaseProvider = Depends(get_case_provider)):
     result = CaseDetailService(provider=provider).get_case_sections(case_id)
     if result is None:
@@ -62,7 +62,7 @@ def get_case_sections(case_id: str, provider: CaseProvider = Depends(get_case_pr
     return api_success(result)
 
 
-@router.get("/cases/{case_id}/similar")
+@router.get("/cases/{case_id}/similar", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def get_similar_cases(case_id: str, provider: CaseProvider = Depends(get_case_provider)):
     result = CaseSearchService(provider=provider).similar(case_id)
     if result is None:
@@ -73,7 +73,7 @@ def get_similar_cases(case_id: str, provider: CaseProvider = Depends(get_case_pr
     return api_success(result.model_dump())
 
 
-@router.get("/cases/{case_id}/legal-terms")
+@router.get("/cases/{case_id}/legal-terms", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def get_case_legal_terms(case_id: str, provider: CaseProvider = Depends(get_case_provider)):
     if CaseDetailService(provider=provider).get_case_detail(case_id) is None:
         return JSONResponse(
@@ -83,7 +83,7 @@ def get_case_legal_terms(case_id: str, provider: CaseProvider = Depends(get_case
     return api_success({"case_id": case_id, "terms": LegalTermService(provider=provider).extract_terms(case_id)})
 
 
-@router.post("/cases/{case_id}/summary")
+@router.post("/cases/{case_id}/summary", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def summarize_case(case_id: str, request: SummaryRequest, provider: CaseProvider = Depends(get_case_provider)):
     result = SummaryService(provider=provider).summarize(case_id, request.force_regenerate)
     if result is None:
@@ -94,7 +94,7 @@ def summarize_case(case_id: str, request: SummaryRequest, provider: CaseProvider
     return api_success(result)
 
 
-@router.post("/cases/{case_id}/simplify")
+@router.post("/cases/{case_id}/simplify", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def simplify_case(case_id: str, request: SimplificationRequest, provider: CaseProvider = Depends(get_case_provider)):
     result = SimplificationService(provider=provider).simplify_case(case_id, request.section_types, request.force_regenerate)
     if result is None:
@@ -105,7 +105,7 @@ def simplify_case(case_id: str, request: SimplificationRequest, provider: CasePr
     return api_success(result)
 
 
-@router.get("/cases/{case_id}/simplified")
+@router.get("/cases/{case_id}/simplified", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def get_simplified_case(case_id: str, provider: CaseProvider = Depends(get_case_provider)):
     result = SimplificationService(provider=provider).get_simplified_case(case_id)
     if result is None:
@@ -116,7 +116,7 @@ def get_simplified_case(case_id: str, provider: CaseProvider = Depends(get_case_
     return api_success(result)
 
 
-@router.post("/cases/{case_id}/paragraphs/{paragraph_id}/simplify")
+@router.post("/cases/{case_id}/paragraphs/{paragraph_id}/simplify", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def simplify_single_paragraph(case_id: str, paragraph_id: str, provider: CaseProvider = Depends(get_case_provider)):
     result = SimplificationService(provider=provider).simplify_paragraph(case_id, paragraph_id)
     if result is None:
