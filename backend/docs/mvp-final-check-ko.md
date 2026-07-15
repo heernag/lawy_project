@@ -21,7 +21,7 @@
 
 ```text
 python -m pytest -q
-89 passed, 1 warning
+90 passed, 1 warning
 ```
 
 README 기준 실행 검증:
@@ -59,7 +59,7 @@ Easy Case Law Backend
 | 존재하지 않는 판결문 생성 방지 | 완료 | missing case 테스트 |
 | CORS 설정 | 완료 | CORS integration test |
 | `.env` Git 제외 | 완료 | `.env.example`만 제공 |
-| 프론트 연동 문서 | 완료 | `frontend-integration.md`, `frontend-flow-ko.md` |
+| 프론트 연동 문서 | 완료 | `frontend-integration.md`, `frontend-flow-ko.md`, TypeScript 계약 예시 테스트 |
 | Bruno 테스트 컬렉션 | 완료 | `backend/bruno` |
 | README 실행 가이드 | 완료 | README 갱신 및 테스트 명령 검증 |
 | 모든 변경 커밋 | 완료 | 최근 작업은 장 단위 커밋으로 정리됨 |
@@ -76,6 +76,7 @@ Easy Case Law Backend
 - `23c1cf4 test: add address masking false positive fixtures`
 - `docs: refresh korean progress notes`
 - `test: add judgment section heading fixtures`
+- `docs: lock frontend TypeScript contract examples`
 
 커밋 전 전체 테스트도 다시 통과했습니다.
 

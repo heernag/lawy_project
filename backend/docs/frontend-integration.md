@@ -108,6 +108,50 @@ export interface CaseSearchItem {
   source_name: string;
   source_url: string;
 }
+
+export interface CaseSearchResponse {
+  total_count: number;
+  page: number;
+  size: number;
+  results: CaseSearchItem[];
+  applied_filters: Record<string, unknown>;
+  extracted_keywords: string[];
+}
+
+export interface CaseDetailResponse {
+  case_id: string;
+  case_number: string;
+  case_name: string;
+  court_name: string;
+  court_department: string;
+  decision_date: string | null;
+  category: string;
+  judgment_result: string;
+  order_text: string;
+  original_text: string;
+  source_name: string;
+  source_url: string;
+  summary: string;
+  main_issues: string[];
+}
+
+export interface SimplificationRequest {
+  section_types?: string[] | null;
+  force_regenerate: boolean;
+}
+
+export interface SimplifiedParagraph {
+  paragraph_id: string;
+  original_text: string;
+  simplified_text: string;
+  validation_status: string;
+  warnings: string[];
+}
+
+export interface SimplifiedCaseResponse {
+  case_id: string;
+  paragraphs: SimplifiedParagraph[];
+}
 ```
 
 ## Fetch Example
@@ -123,7 +167,7 @@ const response = await fetch("http://localhost:8000/api/cases/search", {
   }),
 });
 
-const data = await response.json();
+const data: ApiResponse<CaseSearchResponse> = await response.json();
 ```
 
 ## Bruno Test Collection

@@ -126,6 +126,8 @@
 - 에러 코드 상수 관리
 - `ALL_ERROR_CODES` 제공
 - 프론트용 TypeScript 타입 예시 작성
+- 검색 응답, 상세 응답, 쉬운 설명 응답 TypeScript 계약 예시 보강
+- 프론트 연동 문서의 핵심 응답 타입 누락을 막는 테스트 추가
 - 검증 실패 응답 예시 작성
 - 전체 API 체크리스트 작성
 - Bruno 테스트 컬렉션 작성
@@ -147,7 +149,7 @@
 
 ```text
 python -m pytest -q
-89 passed, 1 warning
+90 passed, 1 warning
 ```
 
 경고 1개는 기존 FastAPI/Starlette TestClient 관련 경고입니다.
@@ -164,6 +166,7 @@ python -m pytest -q
 - `23c1cf4 test: add address masking false positive fixtures`
 - `docs: refresh korean progress notes`
 - `test: add judgment section heading fixtures`
+- `docs: lock frontend TypeScript contract examples`
 
 최신 커밋 해시는 `git log --oneline -n 1` 기준으로 확인합니다.
 
@@ -183,7 +186,7 @@ python -m pytest -q
 
 - 주소 마스킹 테스트 추가
 - 판결문 제목/섹션 분리 테스트 추가 보강
-- 프론트가 자동 생성 타입을 쓰게 되면 OpenAPI 계약 검증 추가
+- 프론트가 자동 생성 타입을 쓰게 되면 OpenAPI 기반 자동 타입 생성 검토
 - 필요하면 헬스 체크에 DB/검색 인덱스 상태 확인 추가
 
 ### 무료 MVP 이후로 미뤄도 되는 것

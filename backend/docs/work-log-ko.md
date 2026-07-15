@@ -250,10 +250,40 @@ python -m pytest tests\unit\test_paragraph_service.py -q
 10 passed
 ```
 
+### 12. 프론트 TypeScript 계약 예시 보강
+
+수정한 파일:
+
+- `backend/docs/frontend-integration.md`
+- `backend/tests/unit/test_frontend_integration_docs.py`
+- `backend/docs/progress-summary-ko.md`
+- `backend/docs/work-log-ko.md`
+- `backend/docs/mvp-final-check-ko.md`
+
+작업 내용:
+
+- 프론트 연동 문서에 `CaseSearchResponse` 타입 예시를 추가했다.
+- 판결문 상세 응답용 `CaseDetailResponse` 타입 예시를 추가했다.
+- 쉬운 설명 요청/응답용 `SimplificationRequest`, `SimplifiedParagraph`, `SimplifiedCaseResponse` 타입 예시를 추가했다.
+- 검색 예시 코드가 `ApiResponse<CaseSearchResponse>`를 사용하도록 갱신했다.
+- 핵심 TypeScript 타입 예시가 문서에서 빠지면 테스트가 실패하도록 단위 테스트를 추가했다.
+
+검증:
+
+```text
+python -m pytest tests\unit\test_frontend_integration_docs.py -q
+1 failed
+```
+
+```text
+python -m pytest tests\unit\test_frontend_integration_docs.py -q
+1 passed
+```
+
 ## 이번 챕터 변경 파일
 
-- `backend/app/services/paragraph_service.py`
-- `backend/tests/unit/test_paragraph_service.py`
+- `backend/docs/frontend-integration.md`
+- `backend/tests/unit/test_frontend_integration_docs.py`
 - `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
 - `backend/docs/mvp-final-check-ko.md`
@@ -261,4 +291,4 @@ python -m pytest tests\unit\test_paragraph_service.py -q
 ## 다음에 이어서 할 작업
 
 1. 필요 시 완전히 새 환경에서 의존성 설치부터 재검증한다.
-2. OpenAPI 응답 계약과 프론트 TypeScript 타입 예시의 필드명을 다시 점검한다.
+2. OpenAPI JSON을 직접 검사하는 계약 테스트를 추가한다.
