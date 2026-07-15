@@ -76,3 +76,20 @@ def test_split_sections_normalizes_conclusion_and_law_headings():
     assert [section.section_type for section in sections] == ["결론", "관련 법령"]
     assert sections[0].paragraphs[0].original_text == "따라서 원고의 청구는 이유 있다."
     assert sections[1].paragraphs[0].original_text == "민법 제390조"
+
+
+def test_split_sections_normalizes_recognized_fact_headings():
+    text = "\n".join(
+        [
+            "1. 기초사실",
+            "원고와 피고는 매매계약을 체결하였다.",
+            "2. 인정된 사실",
+            "제품에는 하자가 있었다.",
+        ]
+    )
+
+    sections = ParagraphService().split_sections(text)
+
+    assert [section.section_type for section in sections] == ["인정 사실", "인정 사실"]
+    assert sections[0].paragraphs[0].original_text == "원고와 피고는 매매계약을 체결하였다."
+    assert sections[1].paragraphs[0].original_text == "제품에는 하자가 있었다."
