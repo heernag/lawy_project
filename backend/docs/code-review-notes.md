@@ -23,6 +23,8 @@ Overall direction is sound for the requested MVP:
   search validation, date validation, and request validation errors.
 - Health checks now include lightweight case-provider and sample-data bootstrap
   diagnostics.
+- Frontend integration docs now include concrete validation error examples,
+  including production-like responses where validation details are hidden.
 
 Main residual risks:
 
@@ -351,6 +353,35 @@ Review notes:
   overlaps with schema validation. It is harmless but could be removed later for
   clarity.
 
+### 12. Frontend Validation Error Examples
+
+Related commits:
+
+- This chapter will be tracked by the next documentation commit.
+
+What changed:
+
+- Added concrete `INVALID_REQUEST` examples to the frontend integration guide.
+- Documented missing-field, invalid-pagination, and production-like
+  `details: null` responses.
+- Added a small TypeScript error-message helper showing how the frontend can
+  branch on stable error codes instead of fragile validation-detail text.
+- Added a matching validation-error example to the API spec.
+
+Why it matters:
+
+- Frontend code can handle invalid request bodies without parsing FastAPI's
+  default 422 shape.
+- UI behavior can remain stable when production hides validation internals.
+
+Review notes:
+
+- Good: The frontend is guided to use `error.code`, which is the stable API
+  contract.
+- Good: The examples do not expose raw user case text or require paid services.
+- Risk: Exact `details` contents should still be treated as diagnostic metadata,
+  not as a UI contract.
+
 ## Cross-Cutting Review
 
 ### Architecture
@@ -441,9 +472,9 @@ Recommended order:
 
 1. Add address false-positive tests before expanding address detection.
 2. Add a free local embedding adapter only if it can run without paid APIs.
-3. Add response examples for validation errors in the frontend guide.
-4. Add section-splitting fixtures for appeal/court-procedure headings.
-5. Add a structured startup diagnostics service if health checks grow further.
+3. Add section-splitting fixtures for appeal/court-procedure headings.
+4. Add a structured startup diagnostics service if health checks grow further.
+5. Add a small frontend-facing error-code reference table.
 
 ## Verification Snapshot
 

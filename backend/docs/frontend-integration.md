@@ -131,6 +131,83 @@ the normalized value must be 2 to 500 characters.
 Date filters must be `YYYY-MM-DD`; when both dates are present, `start_date`
 must be earlier than or equal to `end_date`.
 
+## Validation Error Examples
+
+All invalid request bodies use HTTP 400 with the common API error shape. Treat
+`error.code` as the stable field for UI branching.
+
+Missing required field:
+
+```json
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "Request validation failed.",
+    "details": [
+      {
+        "type": "missing",
+        "loc": ["body", "query"],
+        "msg": "Field required"
+      }
+    ]
+  }
+}
+```
+
+Invalid search pagination:
+
+```json
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "Request validation failed.",
+    "details": [
+      {
+        "type": "greater_than_equal",
+        "loc": ["body", "page"],
+        "msg": "Input should be greater than or equal to 1"
+      }
+    ]
+  }
+}
+```
+
+Production-like environments hide validation details:
+
+```json
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "Request validation failed.",
+    "details": null
+  }
+}
+```
+
+Recommended client handling:
+
+```typescript
+function getErrorMessage(error: ApiError | null): string {
+  if (!error) return "요청 처리 중 알 수 없는 오류가 발생했습니다.";
+
+  if (error.code === "INVALID_REQUEST") {
+    return "입력값을 다시 확인해 주세요.";
+  }
+
+  if (error.code === "CASE_NOT_FOUND") {
+    return "판결문을 찾을 수 없습니다.";
+  }
+
+  return error.message;
+}
+```
+
 ## User Notice
 
 This service is a reference tool for searching and understanding stored public or sample judgments. It is not legal advice and does not predict win/loss probability.

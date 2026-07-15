@@ -34,6 +34,26 @@ Validation `details` are included in `development`, `local`, and `test`
 environments. In production-like environments, `details` are returned as `null`
 to avoid exposing internal validation metadata.
 
+Example validation error:
+
+```json
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "Request validation failed.",
+    "details": [
+      {
+        "type": "missing",
+        "loc": ["body", "query"],
+        "msg": "Field required"
+      }
+    ]
+  }
+}
+```
+
 ## Endpoints
 
 ### `GET /api/health`
