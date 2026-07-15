@@ -31,6 +31,8 @@ Overall direction is sound for the requested MVP:
   headings such as `항소취지`, `항소이유`, and `상고이유`.
 - Error codes now have an exported `ALL_ERROR_CODES` contract and a
   frontend-facing reference table.
+- Health diagnostics now live in `HealthService` instead of being calculated
+  directly inside the FastAPI route.
 
 Main residual risks:
 
@@ -47,6 +49,8 @@ Main residual risks:
   by amount expressions such as `123만 원`.
 - Section splitting handles more fixture-backed judgment headings, but remains
   heuristic for unseen court document formats.
+- Health checks are still intentionally lightweight and local; they do not call
+  external paid services.
 - Existing sample text and some console output can appear garbled on Windows
   terminals if the shell encoding is not UTF-8, even when tests pass.
 
@@ -484,6 +488,36 @@ Review notes:
 - Risk: The TypeScript union in the docs is still manually copied. A later
   generated client could eliminate that duplication.
 
+### 16. Health Diagnostics Service
+
+Related commits:
+
+- This chapter will be tracked by the next refactor commit.
+
+What changed:
+
+- Added `HealthService` to own case-provider health diagnostics.
+- Added unit tests for available sample data, empty provider results, and
+  provider failures.
+- Updated the health route so it delegates diagnostic calculation to the
+  service and only wraps the result in the common success response.
+- Updated the API spec to note that health diagnostics are service-backed.
+
+Why it matters:
+
+- The route stays small as diagnostics grow.
+- Provider exception details remain hidden behind the generic
+  `case provider check failed` message.
+- Startup and operations checks can expand later without mixing DB/provider
+  logic into HTTP routing code.
+
+Review notes:
+
+- Good: Existing `/api/health` response shape stayed unchanged.
+- Good: Failure behavior is now covered at both service and API levels.
+- Risk: The health check still only proves the case provider can be queried; it
+  does not yet check migrations, disk permissions, or search-index freshness.
+
 ## Cross-Cutting Review
 
 ### Architecture
@@ -573,11 +607,12 @@ Review recommendations:
 Recommended order:
 
 1. Add a free local embedding adapter only if it can run without paid APIs.
-2. Add a structured startup diagnostics service if health checks grow further.
-3. Add more address positive/false-positive fixtures before widening masking.
-4. Add more section-splitting fixtures for court-procedure headings.
-5. Add a generated OpenAPI/TypeScript contract check if the frontend starts
+2. Add more address positive/false-positive fixtures before widening masking.
+3. Add more section-splitting fixtures for court-procedure headings.
+4. Add a generated OpenAPI/TypeScript contract check if the frontend starts
    depending on generated clients.
+5. Add migration/search-index freshness checks to `HealthService` if operations
+   needs deeper diagnostics.
 
 ## Verification Snapshot
 
@@ -585,7 +620,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-78 passed, 1 warning
+81 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

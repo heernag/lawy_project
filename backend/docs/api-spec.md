@@ -76,6 +76,8 @@ data bootstrap.
 If the case provider cannot be queried, `status` becomes `degraded` and the
 provider check returns a generic failure message without exposing internal
 exception details.
+The diagnostic calculation is handled by `HealthService` so more checks can be
+added without putting provider logic directly in the route.
 
 ### `POST /api/cases/analyze`
 
