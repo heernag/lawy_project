@@ -298,6 +298,8 @@ Review notes:
   responses.
 - Good: Production-like environments hide internal validation metadata by
   returning `details: null`.
+- Good: Malformed JSON bodies and missing required fields are covered by
+  regression tests for the common error format.
 - Risk: Frontend code must treat `error.details` as optional.
 
 ### 11. Search Query Normalization
@@ -403,11 +405,11 @@ Review recommendations:
 
 Recommended order:
 
-1. Add malformed JSON and missing-field API tests.
-2. Add more section-splitting fixtures for different judgment formats.
-3. Add address false-positive tests before expanding address detection.
-4. Add a free local embedding adapter only if it can run without paid APIs.
-5. Add a lightweight startup/data-bootstrap health diagnostic.
+1. Add more section-splitting fixtures for different judgment formats.
+2. Add address false-positive tests before expanding address detection.
+3. Add a free local embedding adapter only if it can run without paid APIs.
+4. Add a lightweight startup/data-bootstrap health diagnostic.
+5. Add response examples for validation errors in the frontend guide.
 
 ## Verification Snapshot
 
@@ -415,7 +417,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-67 passed, 1 warning
+69 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

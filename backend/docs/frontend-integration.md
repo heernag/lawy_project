@@ -118,6 +118,7 @@ The backend rejects analysis queries shorter than 5 characters or longer than
 conclusion.
 For search, send `page >= 1` and `1 <= size <= 50`. Invalid request bodies are
 returned as HTTP 400 with `error.code === "INVALID_REQUEST"`.
+Malformed JSON and missing required fields also use this same error shape.
 Do not rely on `error.details` being present. It is available in development-
 like environments and hidden in production-like environments.
 Search `query` is normalized by trimming and collapsing repeated whitespace;

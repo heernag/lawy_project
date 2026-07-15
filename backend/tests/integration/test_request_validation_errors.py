@@ -38,3 +38,39 @@ def test_validation_error_hides_details_in_production(monkeypatch):
     assert body["error"]["details"] is None
 
     get_settings.cache_clear()
+
+
+def test_malformed_json_returns_common_invalid_request_error(monkeypatch):
+    monkeypatch.setenv("APP_ENV", "development")
+    get_settings.cache_clear()
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/cases/search",
+        content='{"query": "deposit dispute",',
+        headers={"Content-Type": "application/json"},
+    )
+
+    assert response.status_code == 400
+    body = response.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "INVALID_REQUEST"
+    assert body["error"]["details"]
+
+    get_settings.cache_clear()
+
+
+def test_missing_required_body_field_returns_common_invalid_request_error(monkeypatch):
+    monkeypatch.setenv("APP_ENV", "development")
+    get_settings.cache_clear()
+    client = TestClient(create_app())
+
+    response = client.post("/api/cases/search", json={"page": 1, "size": 10})
+
+    assert response.status_code == 400
+    body = response.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "INVALID_REQUEST"
+    assert body["error"]["details"]
+
+    get_settings.cache_clear()
