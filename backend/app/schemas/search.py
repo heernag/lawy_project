@@ -1,4 +1,5 @@
 from datetime import date
+import re
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -12,6 +13,14 @@ class CaseSearchRequest(BaseModel):
     judgment_result: str | None = None
     page: int = Field(default=1, ge=1)
     size: int = Field(default=10, ge=1, le=50)
+
+    @field_validator("query")
+    @classmethod
+    def normalize_query(cls, value: str) -> str:
+        normalized = re.sub(r"\s+", " ", value).strip()
+        if len(normalized) < 2 or len(normalized) > 500:
+            raise ValueError("검색어는 2자 이상 500자 이하로 입력해야 합니다.")
+        return normalized
 
     @field_validator("start_date", "end_date")
     @classmethod

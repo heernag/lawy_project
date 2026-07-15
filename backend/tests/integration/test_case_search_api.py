@@ -46,6 +46,33 @@ def test_search_api_returns_common_error_for_invalid_size():
     assert body["error"]["code"] == "INVALID_REQUEST"
 
 
+def test_search_api_returns_common_error_for_too_short_query():
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/cases/search",
+        json={"query": "a", "page": 1, "size": 10},
+    )
+
+    assert response.status_code == 400
+    body = response.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "INVALID_REQUEST"
+
+
+def test_search_api_normalizes_query_whitespace():
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/cases/search",
+        json={"query": "deposit\n\t dispute", "page": 1, "size": 10},
+    )
+
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert data["extracted_keywords"] == ["deposit", "dispute"]
+
+
 def test_search_api_returns_common_error_for_invalid_date_format():
     client = TestClient(create_app())
 

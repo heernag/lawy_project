@@ -71,6 +71,8 @@ Request:
 ```
 
 Search uses exact case-number matching, metadata filters, keyword overlap, and locally stored search-index text from SQLite. It does not call paid embedding APIs.
+`query` is trimmed, repeated whitespace is collapsed, and the normalized value
+must be between 2 and 500 characters.
 `page` must be 1 or greater. `size` must be between 1 and 50.
 `start_date` and `end_date` must use `YYYY-MM-DD`. If both are provided,
 `start_date` must be earlier than or equal to `end_date`.
