@@ -82,6 +82,8 @@ What changed:
   `1. 주문`, `2. 청구취지`, and `가. 이유`.
 - Later added aliases for party-argument headings such as `원고의 주장` and
   `피고의 주장`.
+- Later added aliases for law headings such as `적용법령`, normalized to
+  `관련 법령`.
 
 Why it matters:
 
@@ -98,6 +100,8 @@ Review notes:
   sample text format.
 - Good: Party-argument fixture coverage helps keep claims and court reasoning
   separated for downstream simplification.
+- Good: Law-heading fixture coverage keeps legal basis text out of conclusion
+  paragraphs.
 - Risk: Section splitting is still heuristic. More real judgment formats will
   need fixture-based tests.
 
@@ -417,7 +421,7 @@ Recommended order:
 2. Add a free local embedding adapter only if it can run without paid APIs.
 3. Add a lightweight startup/data-bootstrap health diagnostic.
 4. Add response examples for validation errors in the frontend guide.
-5. Add section-splitting fixtures for conclusion and related-law headings.
+5. Add section-splitting fixtures for recognized-fact heading variants.
 
 ## Verification Snapshot
 
@@ -425,7 +429,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-71 passed, 1 warning
+72 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

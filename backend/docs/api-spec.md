@@ -92,7 +92,7 @@ Returns a stored sample case. Unknown IDs return `CASE_NOT_FOUND`.
 Returns sections and paragraphs with stable paragraph IDs. Sections and paragraphs are loaded from SQLite after startup bootstrap.
 The section splitter recognizes common headings such as `주문`, `청구 취지`,
 `이유`, `원고 주장`, `피고 주장`, and `법원의 판단`, including simple
-numbered forms like `1. 주문` and aliases like `원고의 주장`.
+numbered forms like `1. 주문` and aliases like `원고의 주장` or `적용법령`.
 
 ### `POST /api/cases/{case_id}/summary`
 

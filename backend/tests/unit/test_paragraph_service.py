@@ -59,3 +59,20 @@ def test_split_sections_normalizes_party_argument_headings():
     assert sections[0].paragraphs[0].original_text == "원고는 계약 해제를 주장한다."
     assert sections[1].paragraphs[0].original_text == "피고는 하자가 없었다고 다툰다."
     assert sections[2].paragraphs[0].original_text == "법원은 피고의 책임을 인정한다."
+
+
+def test_split_sections_normalizes_conclusion_and_law_headings():
+    text = "\n".join(
+        [
+            "4. 결론",
+            "따라서 원고의 청구는 이유 있다.",
+            "5. 적용법령",
+            "민법 제390조",
+        ]
+    )
+
+    sections = ParagraphService().split_sections(text)
+
+    assert [section.section_type for section in sections] == ["결론", "관련 법령"]
+    assert sections[0].paragraphs[0].original_text == "따라서 원고의 청구는 이유 있다."
+    assert sections[1].paragraphs[0].original_text == "민법 제390조"
