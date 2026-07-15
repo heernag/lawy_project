@@ -54,8 +54,27 @@ def test_analyze_masks_clear_korean_road_address():
     assert {item.type for item in result.privacy_detections} >= {"address"}
 
 
+def test_analyze_masks_korean_road_address_with_city_and_district():
+    query = "계약 장소는 경기도 성남시 분당구 판교역로 235입니다."
+
+    result = CaseAnalysisService().analyze(query)
+
+    assert "경기도 성남시 분당구 판교역로 235" not in result.sanitized_query
+    assert "[ADDRESS_1]" in result.sanitized_query
+    assert {item.type for item in result.privacy_detections} >= {"address"}
+
+
 def test_analyze_does_not_mask_road_name_followed_by_amount():
     query = "서울시 강남구 테헤란로 123만 원 손해배상을 청구했습니다."
+
+    result = CaseAnalysisService().analyze(query)
+
+    assert result.sanitized_query == query
+    assert "address" not in {item.type for item in result.privacy_detections}
+
+
+def test_analyze_does_not_mask_road_name_followed_by_sequence_number():
+    query = "서울시 강남구 테헤란로 3번 쟁점을 검토했습니다."
 
     result = CaseAnalysisService().analyze(query)
 

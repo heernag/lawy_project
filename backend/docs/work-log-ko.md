@@ -166,15 +166,36 @@ python -m pytest -q
   provider를 구현하지 않는다고 적었다.
 - 미래 구현도 `CaseProvider` 인터페이스 뒤에 붙여야 한다고 정리했다.
 
+### 9. 주소 마스킹 fixture 보강
+
+수정한 파일:
+
+- `backend/app/services/case_analysis_service.py`
+- `backend/tests/unit/test_case_analysis_service.py`
+
+작업 내용:
+
+- `경기도 성남시 분당구 판교역로 235` 형태의 도로명 주소 fixture를 추가했다.
+- `서울시 강남구 테헤란로 3번 쟁점`처럼 숫자 뒤 `번`이 붙은 순번 표현은 주소로
+  마스킹하지 않도록 false-positive fixture를 추가했다.
+- 주소 정규식에 `번` 오탐 방지 조건을 추가했다.
+
+검증:
+
+```text
+python -m pytest tests\unit\test_case_analysis_service.py::test_analyze_masks_clear_korean_road_address tests\unit\test_case_analysis_service.py::test_analyze_masks_korean_road_address_with_city_and_district tests\unit\test_case_analysis_service.py::test_analyze_does_not_mask_road_name_followed_by_amount tests\unit\test_case_analysis_service.py::test_analyze_does_not_mask_road_name_followed_by_sequence_number -q
+4 passed
+```
+
 ## 현재 미커밋 작업
 
-- `backend/docs/api-checklist-ko.md`
-- `backend/docs/data-source-policy.md`
+- `backend/app/services/case_analysis_service.py`
 - `backend/docs/mvp-final-check-ko.md`
 - `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
+- `backend/tests/unit/test_case_analysis_service.py`
 
 ## 다음에 이어서 할 작업
 
-1. 최종 점검표 갱신 문서를 커밋한다.
+1. 주소 마스킹 fixture 보강 작업을 커밋한다.
 2. 필요 시 완전히 새 환경에서 의존성 설치부터 재검증한다.

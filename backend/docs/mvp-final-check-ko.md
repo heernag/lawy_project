@@ -45,7 +45,7 @@ Easy Case Law Backend
 | Swagger 확인 | 완료 | FastAPI `/docs` |
 | OpenAPI JSON 확인 | 완료 | FastAPI `/openapi.json` |
 | 사건 문장 분석 | 완료 | `POST /api/cases/analyze`, 테스트 존재 |
-| 개인정보 탐지/마스킹 | 완료 | 전화번호, 주민등록번호 형식, 이메일, 도로명 주소 |
+| 개인정보 탐지/마스킹 | 완료 | 전화번호, 주민등록번호 형식, 이메일, 도로명 주소, 주소 오탐 방지 fixture |
 | 실제 저장 판결문만 검색 | 완료 | 샘플/DB provider 기반 |
 | 사건번호 검색 | 완료 | 사건번호 정확 검색 테스트 |
 | 키워드 검색 | 완료 | 로컬 검색 테스트 |
