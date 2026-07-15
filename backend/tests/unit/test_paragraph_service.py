@@ -130,3 +130,46 @@ def test_split_sections_accepts_appeal_and_supreme_court_headings():
     assert sections[0].paragraphs[0].original_text == "제1심판결을 취소한다."
     assert sections[1].paragraphs[0].original_text == "원고는 사실오인을 주장한다."
     assert sections[2].paragraphs[0].original_text == "피고는 법리오해를 주장한다."
+
+
+def test_split_sections_normalizes_criminal_judgment_headings():
+    text = "\n".join(
+        [
+            "범죄사실",
+            "피고인은 피해자에게 재산상 손해를 입혔다.",
+            "증거의 요지",
+            "증인 진술 및 거래 내역",
+            "법령의 적용",
+            "형법 제347조",
+            "양형의 이유",
+            "피고인의 피해 회복 여부를 고려한다.",
+        ]
+    )
+
+    sections = ParagraphService().split_sections(text)
+
+    assert [section.section_type for section in sections] == ["범죄 사실", "증거의 요지", "관련 법령", "법원의 판단"]
+    assert sections[0].paragraphs[0].original_text == "피고인은 피해자에게 재산상 손해를 입혔다."
+    assert sections[1].paragraphs[0].original_text == "증인 진술 및 거래 내역"
+    assert sections[2].paragraphs[0].original_text == "형법 제347조"
+    assert sections[3].paragraphs[0].original_text == "피고인의 피해 회복 여부를 고려한다."
+
+
+def test_split_sections_normalizes_administrative_judgment_headings():
+    text = "\n".join(
+        [
+            "1. 처분의 경위",
+            "행정청은 원고에게 영업정지 처분을 하였다.",
+            "2. 관계 법령",
+            "행정절차법 제21조",
+            "3. 판단",
+            "이 사건 처분에는 절차상 하자가 있다.",
+        ]
+    )
+
+    sections = ParagraphService().split_sections(text)
+
+    assert [section.section_type for section in sections] == ["인정 사실", "관련 법령", "법원의 판단"]
+    assert sections[0].paragraphs[0].original_text == "행정청은 원고에게 영업정지 처분을 하였다."
+    assert sections[1].paragraphs[0].original_text == "행정절차법 제21조"
+    assert sections[2].paragraphs[0].original_text == "이 사건 처분에는 절차상 하자가 있다."

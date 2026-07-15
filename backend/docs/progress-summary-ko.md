@@ -90,6 +90,8 @@
 - `주문`, `청구 취지`, `이유`, `인정 사실`, `원고 주장`, `피고 주장`, `법원의 판단`, `결론`, `관련 법령` 인식
 - 번호가 붙은 제목 인식
 - `항소취지`, `항소이유`, `상고이유` 인식
+- 형사 판결문에서 자주 보이는 `범죄사실`, `증거의 요지`, `법령의 적용`, `양형의 이유` 인식
+- 행정 판결문에서 자주 보이는 `처분의 경위`, `관계 법령`, `판단` 인식
 
 ### 7. 쉬운 설명 생성과 검증
 
@@ -145,7 +147,7 @@
 
 ```text
 python -m pytest -q
-87 passed, 1 warning
+89 passed, 1 warning
 ```
 
 경고 1개는 기존 FastAPI/Starlette TestClient 관련 경고입니다.
@@ -161,6 +163,7 @@ python -m pytest -q
 - `759ee3a docs: expand official data source review policy`
 - `23c1cf4 test: add address masking false positive fixtures`
 - `docs: refresh korean progress notes`
+- `test: add judgment section heading fixtures`
 
 최신 커밋 해시는 `git log --oneline -n 1` 기준으로 확인합니다.
 
@@ -179,7 +182,7 @@ python -m pytest -q
 ### 하면 좋은 것
 
 - 주소 마스킹 테스트 추가
-- 판결문 제목/섹션 분리 테스트 추가
+- 판결문 제목/섹션 분리 테스트 추가 보강
 - 프론트가 자동 생성 타입을 쓰게 되면 OpenAPI 계약 검증 추가
 - 필요하면 헬스 체크에 DB/검색 인덱스 상태 확인 추가
 

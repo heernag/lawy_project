@@ -21,7 +21,7 @@
 
 ```text
 python -m pytest -q
-87 passed, 1 warning
+89 passed, 1 warning
 ```
 
 README 기준 실행 검증:
@@ -51,7 +51,7 @@ Easy Case Law Backend
 | 키워드 검색 | 완료 | 로컬 검색 테스트 |
 | 벡터 유사도 검색 | 완료 | 무료 로컬 해시 임베딩 구현 및 커밋 |
 | 판결문 상세 원문 반환 | 완료 | `GET /api/cases/{case_id}` |
-| 문단 단위 반환 | 완료 | `GET /api/cases/{case_id}/sections` |
+| 문단 단위 반환 | 완료 | `GET /api/cases/{case_id}/sections`, 형사/행정 섹션 fixture |
 | 쉬운 설명과 원문 문단 연결 | 완료 | paragraph ID 기반 |
 | 금액/날짜/사건번호/판결 결과 검증 | 완료 | `legal_text_validator` 테스트 |
 | 검증 실패 상태 반환 | 완료 | simplification validation 결과 |
@@ -75,6 +75,7 @@ Easy Case Law Backend
 - `759ee3a docs: expand official data source review policy`
 - `23c1cf4 test: add address masking false positive fixtures`
 - `docs: refresh korean progress notes`
+- `test: add judgment section heading fixtures`
 
 커밋 전 전체 테스트도 다시 통과했습니다.
 
@@ -87,7 +88,7 @@ Easy Case Law Backend
 아래는 무료 MVP 이후 또는 안정화 단계에서 해도 됩니다.
 
 - 주소 마스킹 fixture 추가
-- 실제 공개 판결문 형식 기반 섹션 분리 fixture 추가
+- 실제 공개 판결문 형식 기반 섹션 분리 fixture 추가 보강
 - OpenAPI 기반 TypeScript 타입 자동 생성 검토
 - 공식 공공데이터 API 약관 확인 후 provider 추가
 - Alembic 운영 마이그레이션 정리

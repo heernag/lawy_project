@@ -216,11 +216,49 @@ python -m pytest -q
 
 - `docs: refresh korean progress notes`
 
-## 현재 미커밋 작업
+### 11. 판결문 섹션 분리 fixture 보강
 
-- 없음
+수정한 파일:
+
+- `backend/app/services/paragraph_service.py`
+- `backend/tests/unit/test_paragraph_service.py`
+- `backend/docs/progress-summary-ko.md`
+- `backend/docs/work-log-ko.md`
+- `backend/docs/mvp-final-check-ko.md`
+
+작업 내용:
+
+- 형사 판결문에서 자주 보이는 `범죄사실`, `증거의 요지`, `법령의 적용`, `양형의 이유` 제목 fixture를 추가했다.
+- 행정 판결문에서 자주 보이는 `처분의 경위`, `관계 법령`, `판단` 제목 fixture를 추가했다.
+- `범죄사실`은 `범죄 사실`, `법령의 적용`과 `관계 법령`은 `관련 법령`, `양형의 이유`와 `판단`은 `법원의 판단`, `처분의 경위`는 `인정 사실`로 정규화한다.
+- 테스트를 먼저 추가해 실패를 확인한 뒤, 최소 구현으로 통과시켰다.
+
+검증:
+
+```text
+python -m pytest tests\unit\test_paragraph_service.py::test_split_sections_normalizes_criminal_judgment_headings tests\unit\test_paragraph_service.py::test_split_sections_normalizes_administrative_judgment_headings -q
+2 failed
+```
+
+```text
+python -m pytest tests\unit\test_paragraph_service.py::test_split_sections_normalizes_criminal_judgment_headings tests\unit\test_paragraph_service.py::test_split_sections_normalizes_administrative_judgment_headings -q
+2 passed
+```
+
+```text
+python -m pytest tests\unit\test_paragraph_service.py -q
+10 passed
+```
+
+## 이번 챕터 변경 파일
+
+- `backend/app/services/paragraph_service.py`
+- `backend/tests/unit/test_paragraph_service.py`
+- `backend/docs/progress-summary-ko.md`
+- `backend/docs/work-log-ko.md`
+- `backend/docs/mvp-final-check-ko.md`
 
 ## 다음에 이어서 할 작업
 
 1. 필요 시 완전히 새 환경에서 의존성 설치부터 재검증한다.
-2. 실제 공개 판결문 형식 기반 섹션 분리 fixture를 추가한다.
+2. OpenAPI 응답 계약과 프론트 TypeScript 타입 예시의 필드명을 다시 점검한다.
