@@ -11,6 +11,11 @@ class PrivacyDetection(BaseModel):
     masked_value: str
 
 
+class InputWarning(BaseModel):
+    type: str
+    message: str
+
+
 class CaseAnalysisResult(BaseModel):
     category: str
     sub_category: str
@@ -23,3 +28,4 @@ class CaseAnalysisResult(BaseModel):
     legal_terms: list[str]
     privacy_detections: list[PrivacyDetection]
     privacy_warnings: list[str]
+    input_warnings: list[InputWarning]

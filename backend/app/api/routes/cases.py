@@ -22,10 +22,10 @@ router = APIRouter()
 @router.post("/cases/analyze")
 def analyze_case(request: CaseAnalysisRequest):
     query = request.query.strip()
-    if not query or len(query) > 2000:
+    if len(query) < 5 or len(query) > 2000:
         return JSONResponse(
             status_code=400,
-            content=api_error(INVALID_REQUEST, "사건 설명은 1자 이상 2000자 이하로 입력해야 합니다."),
+            content=api_error(INVALID_REQUEST, "사건 설명은 5자 이상 2000자 이하로 입력해야 합니다."),
         )
     return api_success(CaseAnalysisService().analyze(query).model_dump())
 

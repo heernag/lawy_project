@@ -1,6 +1,6 @@
 import re
 
-from app.schemas.case_analysis import CaseAnalysisResult, PrivacyDetection
+from app.schemas.case_analysis import CaseAnalysisResult, InputWarning, PrivacyDetection
 
 
 PRIVACY_PATTERNS: tuple[tuple[str, str, str, re.Pattern[str]], ...] = (
@@ -24,6 +24,14 @@ PRIVACY_PATTERNS: tuple[tuple[str, str, str, re.Pattern[str]], ...] = (
     ),
 )
 
+PROMPT_INJECTION_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"ignore\s+(all\s+)?previous\s+instructions", re.IGNORECASE),
+    re.compile(r"disregard\s+(all\s+)?previous\s+instructions", re.IGNORECASE),
+    re.compile(r"system\s+prompt", re.IGNORECASE),
+    re.compile(r"developer\s+message", re.IGNORECASE),
+    re.compile(r"이전\s*지시(?:를|사항을)?\s*무시", re.IGNORECASE),
+)
+
 
 class CaseAnalysisService:
     def analyze(self, query: str) -> CaseAnalysisResult:
@@ -42,6 +50,7 @@ class CaseAnalysisService:
             legal_terms=self._extract_legal_terms(normalized, sub_category),
             privacy_detections=privacy_detections,
             privacy_warnings=self._privacy_warnings(normalized),
+            input_warnings=self._input_warnings(normalized),
         )
 
     def _mask_privacy_values(self, query: str) -> tuple[str, list[PrivacyDetection]]:
@@ -65,6 +74,19 @@ class CaseAnalysisService:
             sanitized = pattern.sub(replace, sanitized)
 
         return sanitized, detections
+
+    def _input_warnings(self, query: str) -> list[InputWarning]:
+        if any(pattern.search(query) for pattern in PROMPT_INJECTION_PATTERNS):
+            return [
+                InputWarning(
+                    type="prompt_injection_suspected",
+                    message=(
+                        "입력문에 시스템 지시를 바꾸려는 문구와 비슷한 표현이 있어 "
+                        "사건 사실 분석에만 사용합니다."
+                    ),
+                )
+            ]
+        return []
 
     def _classify(self, query: str) -> tuple[str, str]:
         if any(keyword in query for keyword in ["해고", "임금", "퇴직금"]):

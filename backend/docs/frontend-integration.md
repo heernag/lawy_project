@@ -38,6 +38,11 @@ export interface PrivacyDetection {
   masked_value: string;
 }
 
+export interface InputWarning {
+  type: "prompt_injection_suspected" | string;
+  message: string;
+}
+
 export interface CaseAnalysisResult {
   category: string;
   sub_category: string;
@@ -50,6 +55,7 @@ export interface CaseAnalysisResult {
   legal_terms: string[];
   privacy_detections: PrivacyDetection[];
   privacy_warnings: string[];
+  input_warnings: InputWarning[];
 }
 
 export interface CaseSearchRequest {
@@ -99,6 +105,9 @@ const data = await response.json();
 For `/api/cases/analyze`, use `sanitized_query` for any client-side preview
 after privacy detection. Keep the original user input only in local form state
 unless the user explicitly submits it for the next backend action.
+The backend rejects analysis queries shorter than 5 characters or longer than
+2000 characters. Display `input_warnings` as caution text, not as a legal
+conclusion.
 
 ## User Notice
 
