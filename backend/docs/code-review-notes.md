@@ -33,6 +33,9 @@ Overall direction is sound for the requested MVP:
   frontend-facing reference table.
 - Health diagnostics now live in `HealthService` instead of being calculated
   directly inside the FastAPI route.
+- Search similarity now has a free local hash-embedding provider in addition
+  to keyword overlap.
+- README and `.env.example` now refer to the free local hash similarity mode.
 
 Main residual risks:
 
@@ -51,6 +54,10 @@ Main residual risks:
   heuristic for unseen court document formats.
 - Health checks are still intentionally lightweight and local; they do not call
   external paid services.
+- Local hash embeddings are deterministic and free, but they are not a
+  substitute for a legally tuned semantic retrieval model.
+- The README run/test path has been checked by importing the app and running
+  the documented pytest command.
 - Existing sample text and some console output can appear garbled on Windows
   terminals if the shell encoding is not UTF-8, even when tests pass.
 
@@ -518,6 +525,68 @@ Review notes:
 - Risk: The health check still only proves the case provider can be queried; it
   does not yet check migrations, disk permissions, or search-index freshness.
 
+### 17. Free Local Hash Embedding Provider
+
+Related commits:
+
+- This chapter will be tracked by the next feature commit.
+
+What changed:
+
+- Added an `EmbeddingProvider` protocol.
+- Added `LocalHashEmbeddingProvider`, which turns text into deterministic
+  fixed-length vectors using local token hashing.
+- Updated `LocalSimilarityService` to combine keyword overlap with local vector
+  cosine similarity.
+- Added unit tests for deterministic vector generation and embedding-backed
+  similarity scoring.
+- Updated API and frontend docs to state that search uses free local
+  hash-embedding similarity and no paid embedding API.
+
+Why it matters:
+
+- The MVP now has an explicit embedding provider seam without introducing paid
+  services.
+- Search remains fully local while moving closer to the requested hybrid
+  keyword/vector structure.
+
+Review notes:
+
+- Good: The implementation is deterministic, offline, and inexpensive.
+- Good: The provider interface leaves room for a stronger free local model later
+  without changing search routes.
+- Risk: Hash embeddings only approximate lexical vector similarity. They should
+  be treated as MVP relevance support, not legal semantic understanding.
+
+### 18. README Run Verification
+
+Related commits:
+
+- This chapter will be tracked by the next documentation/config commit.
+
+What changed:
+
+- Updated README to mention the Bruno collection and Korean frontend flow guide.
+- Updated README and `.env.example` from `local_tfidf` to `local_hash`.
+- Updated the settings default similarity mode to `local_hash`.
+- Added a settings unit test to lock that free local default.
+- Verified the README test command with `python -m pytest -v`.
+- Verified that the FastAPI app can be created from the documented backend
+  environment.
+
+Why it matters:
+
+- A new developer following README sees the current free local search mode.
+- The documented run/test path matches the codebase as it now stands.
+
+Review notes:
+
+- Good: The change keeps the project free-only and avoids paid embedding
+  services.
+- Good: The README now points frontend developers to the Bruno and flow docs.
+- Risk: A completely clean machine dependency install was not re-run because
+  network/package installation is outside this local verification pass.
+
 ## Cross-Cutting Review
 
 ### Architecture
@@ -606,21 +675,24 @@ Review recommendations:
 
 Recommended order:
 
-1. Add a free local embedding adapter only if it can run without paid APIs.
+1. Commit the currently uncommitted free local hash search and documentation
+   work when Git write approval is available.
 2. Add more address positive/false-positive fixtures before widening masking.
 3. Add more section-splitting fixtures for court-procedure headings.
 4. Add a generated OpenAPI/TypeScript contract check if the frontend starts
    depending on generated clients.
 5. Add migration/search-index freshness checks to `HealthService` if operations
    needs deeper diagnostics.
+6. Add a stronger free local embedding backend only after dependency and
+   runtime-size review.
 
 ## Verification Snapshot
 
 Latest verification before this document was written:
 
 ```text
-python -m pytest -q
-81 passed, 1 warning
+python -m pytest -v
+85 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

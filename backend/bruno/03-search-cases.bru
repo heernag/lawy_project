@@ -1,0 +1,28 @@
+meta {
+  name: 03 Search Cases
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/cases/search
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "query": "중고 노트북 하자 환불",
+    "category": "민사",
+    "court": null,
+    "start_date": null,
+    "end_date": null,
+    "judgment_result": null,
+    "page": 1,
+    "size": 10
+  }
+}

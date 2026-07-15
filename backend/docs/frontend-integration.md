@@ -13,6 +13,10 @@ OpenAPI JSON: `http://localhost:8000/openapi.json`
 
 Health check: `GET http://localhost:8000/api/health`
 
+Bruno collection: `backend/bruno`
+
+Korean frontend flow guide: `backend/docs/frontend-flow-ko.md`
+
 Use `data.checks.sample_data_loaded` to confirm the MVP sample judgments were
 loaded before testing search screens.
 
@@ -122,6 +126,26 @@ const response = await fetch("http://localhost:8000/api/cases/search", {
 const data = await response.json();
 ```
 
+## Bruno Test Collection
+
+The backend includes a Bruno collection for local API checks:
+
+```text
+backend/bruno
+```
+
+Use the `local` environment. It sets:
+
+```text
+base_url=http://localhost:8000
+case_id=sample-001
+paragraph_id=paragraph-1-1
+```
+
+The collection covers health, analysis, search, detail lookup, sections,
+summary, simplification, legal terms, similar cases, and one invalid search
+request example.
+
 For `/api/cases/analyze`, use `sanitized_query` for any client-side preview
 after privacy detection. Keep the original user input only in local form state
 unless the user explicitly submits it for the next backend action.
@@ -139,6 +163,8 @@ Do not rely on `error.details` being present. It is available in development-
 like environments and hidden in production-like environments.
 Search `query` is normalized by trimming and collapsing repeated whitespace;
 the normalized value must be 2 to 500 characters.
+Search relevance uses local keyword matching plus a free local hash-embedding
+fallback. Similarity scores are relevance signals only, not win/loss forecasts.
 Date filters must be `YYYY-MM-DD`; when both dates are present, `start_date`
 must be earlier than or equal to `end_date`.
 

@@ -115,7 +115,9 @@ Request:
 }
 ```
 
-Search uses exact case-number matching, metadata filters, keyword overlap, and locally stored search-index text from SQLite. It does not call paid embedding APIs.
+Search uses exact case-number matching, metadata filters, keyword overlap,
+locally stored search-index text from SQLite, and a free local hash-embedding
+similarity fallback. It does not call paid embedding APIs.
 `query` is trimmed, repeated whitespace is collapsed, and the normalized value
 must be between 2 and 500 characters.
 `page` must be 1 or greater. `size` must be between 1 and 50.

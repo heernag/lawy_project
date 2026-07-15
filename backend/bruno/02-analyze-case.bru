@@ -1,0 +1,21 @@
+meta {
+  name: 02 Analyze Case
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/api/cases/analyze
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "query": "중고 노트북을 구매했는데 제품이 고장 났고 판매자가 환불을 거부합니다."
+  }
+}

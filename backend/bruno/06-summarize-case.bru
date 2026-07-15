@@ -1,0 +1,21 @@
+meta {
+  name: 06 Summarize Case
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{base_url}}/api/cases/{{case_id}}/summary
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "force_regenerate": false
+  }
+}
