@@ -362,10 +362,21 @@ Easy Case Law Backend
 - 리뷰 피드백에 따라 `SIMILARITY_MODE` 설정을 검색 서비스에서 실제로 검증하도록 연결했다.
 - 리뷰 피드백에 따라 API 체크리스트의 테스트 수치를 최신값으로 맞췄다.
 
+### 16. 요구사항별 최종 감사
+
+생성한 파일:
+
+- `backend/docs/final-audit-ko.md`
+
+작업 내용:
+
+- 최초 MVP 완료 조건을 기준으로 현재 구현 상태를 항목별로 감사했다.
+- 구현된 API 목록, 데이터 정책, 무료 버전 원칙, 테스트 범위, 남은 선택 작업을 정리했다.
+- 최종 판단을 “프론트엔드 팀에 인계 가능한 무료 MVP 백엔드”로 기록했다.
+
 ## 이번 챕터 변경 파일
 
-- `backend/docs/code-review-notes.md`
-- `backend/docs/code-review-notes-ko.md`
+- `backend/docs/final-audit-ko.md`
 - `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
 - `backend/docs/mvp-final-check-ko.md`
@@ -373,4 +384,4 @@ Easy Case Law Backend
 ## 다음에 이어서 할 작업
 
 1. 마지막 전체 테스트와 Git 상태를 확인한다.
-2. 최종 완료 여부를 요구사항별로 감사한다.
+2. 최종 감사 문서를 커밋한다.
