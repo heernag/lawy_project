@@ -27,11 +27,11 @@ class SimplificationService:
         if case is None:
             return None
         paragraphs = []
-        for section in self.paragraph_service.split_sections(case.get("original_text", "")):
-            if section_types and section.section_type not in section_types:
+        for section in self._sections(case):
+            if section_types and section["section_type"] not in section_types:
                 continue
-            for paragraph in section.paragraphs:
-                paragraphs.append(self._simplify_paragraph(paragraph.paragraph_id, paragraph.original_text))
+            for paragraph in section["paragraphs"]:
+                paragraphs.append(self._simplify_or_reuse_paragraph(case_id, paragraph))
         return {"case_id": case_id, "paragraphs": paragraphs}
 
     def get_simplified_case(self, case_id: str) -> dict[str, Any] | None:
@@ -41,11 +41,41 @@ class SimplificationService:
         case = self.provider.get_case(case_id)
         if case is None:
             return None
-        for section in self.paragraph_service.split_sections(case.get("original_text", "")):
-            for paragraph in section.paragraphs:
-                if paragraph.paragraph_id == paragraph_id:
-                    return self._simplify_paragraph(paragraph.paragraph_id, paragraph.original_text)
+        for section in self._sections(case):
+            for paragraph in section["paragraphs"]:
+                if paragraph["paragraph_id"] == paragraph_id:
+                    return self._simplify_and_persist(case_id, paragraph["paragraph_id"], paragraph["original_text"])
         return None
+
+    def _sections(self, case: dict[str, Any]) -> list[dict[str, Any]]:
+        stored_sections = case.get("sections") or []
+        if stored_sections:
+            return stored_sections
+        return [section.to_dict() for section in self.paragraph_service.split_sections(case.get("original_text", ""))]
+
+    def _simplify_or_reuse_paragraph(self, case_id: str, paragraph: dict[str, Any]) -> dict[str, Any]:
+        if paragraph.get("simplified_text") and paragraph.get("validation_status") != "not_generated":
+            return {
+                "paragraph_id": paragraph["paragraph_id"],
+                "original_text": paragraph["original_text"],
+                "simplified_text": paragraph["simplified_text"],
+                "validation_status": paragraph.get("validation_status", "passed"),
+                "warnings": paragraph.get("warnings", []),
+            }
+        return self._simplify_and_persist(case_id, paragraph["paragraph_id"], paragraph["original_text"])
+
+    def _simplify_and_persist(self, case_id: str, paragraph_id: str, original_text: str) -> dict[str, Any]:
+        result = self._simplify_paragraph(paragraph_id, original_text)
+        update = getattr(self.provider, "update_paragraph_simplification", None)
+        if update is not None:
+            update(
+                case_id,
+                result["paragraph_id"],
+                result["simplified_text"],
+                result["validation_status"],
+                result["warnings"],
+            )
+        return result
 
     def _simplify_paragraph(self, paragraph_id: str, original_text: str) -> dict[str, Any]:
         simplified = original_text

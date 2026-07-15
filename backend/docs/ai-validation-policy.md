@@ -4,6 +4,8 @@ This MVP does not use a paid external LLM.
 
 Case analysis, summaries, and simplification are rule-based and local. The simplifier performs conservative text replacement and then runs validation.
 
+Generated paragraph simplifications are persisted in SQLite with their validation status and warnings. A stored simplification can be reused by `GET /api/cases/{case_id}/simplified`.
+
 Validation checks:
 
 - amounts

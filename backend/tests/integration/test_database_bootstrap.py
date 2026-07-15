@@ -22,6 +22,9 @@ def test_bootstrap_database_creates_tables_and_loads_sample_cases(tmp_path):
     session = sessionmaker(bind=engine)()
     repository = CaseRepository(session)
     assert repository.get_case("sample-001") is not None
+    sections = repository.get_case_sections("sample-001")
+    assert sections[0]["section_type"] == "주문"
+    assert sections[0]["paragraphs"][0]["paragraph_id"] == "paragraph-1-1"
 
 
 def test_db_case_provider_reads_cases_from_repository():
@@ -51,6 +54,52 @@ def test_db_case_provider_reads_cases_from_repository():
 
     assert provider.get_case("sample-db")["case_name"] == "DB 저장 판결문"
     assert provider.search_cases("저장", {})[0]["case_id"] == "sample-db"
+
+
+def test_db_case_provider_returns_persisted_sections_from_repository():
+    engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+    Base.metadata.create_all(bind=engine)
+    session = sessionmaker(bind=engine)()
+    repository = CaseRepository(session)
+    repository.upsert_case(
+        {
+            "case_id": "sample-section",
+            "case_number": "샘플-SECTION-001",
+            "case_name": "문단 저장 사건",
+            "court_name": "샘플 법원",
+            "decision_date": "2025-01-01",
+            "category": "민사",
+            "judgment_result": "인용",
+            "order_text": "피고는 원고에게 지급하라.",
+            "original_text": "주문\n피고는 원고에게 지급하라.",
+            "summary": "문단 저장 샘플 사건입니다.",
+            "main_issues": ["문단 저장"],
+            "source_name": "MVP sample data",
+            "source_url": "",
+        }
+    )
+    repository.upsert_sections(
+        "sample-section",
+        [
+            {
+                "section_id": "section-1",
+                "section_type": "주문",
+                "section_order": 1,
+                "original_text": "피고는 원고에게 지급하라.",
+                "paragraphs": [
+                    {
+                        "paragraph_id": "paragraph-1-1",
+                        "paragraph_order": 1,
+                        "original_text": "피고는 원고에게 지급하라.",
+                    }
+                ],
+            }
+        ],
+    )
+
+    case = DbCaseProvider(repository).get_case("sample-section")
+
+    assert case["sections"][0]["paragraphs"][0]["original_text"] == "피고는 원고에게 지급하라."
 
 
 def test_app_exposes_database_backed_provider():

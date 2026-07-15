@@ -16,7 +16,7 @@ class DbCaseProvider(CaseProvider):
     def search_cases(self, query: str, filters: dict[str, Any]) -> list[dict[str, Any]]:
         repository, session = self._repository()
         try:
-            cases = [self._to_dict(document) for document in repository.list_cases()]
+            cases = [self._to_dict(document, repository) for document in repository.list_cases()]
         finally:
             self._close_session(session)
         filtered = self._apply_filters(cases, filters)
@@ -46,11 +46,11 @@ class DbCaseProvider(CaseProvider):
             document = repository.get_case(case_id)
             if document is None:
                 return None
-            return self._to_dict(document)
+            return self._to_dict(document, repository)
         finally:
             self._close_session(session)
 
-    def _to_dict(self, document: CaseDocument) -> dict[str, Any]:
+    def _to_dict(self, document: CaseDocument, repository: CaseRepository) -> dict[str, Any]:
         return {
             "case_id": document.id,
             "external_id": document.external_id,
@@ -67,7 +67,22 @@ class DbCaseProvider(CaseProvider):
             "main_issues": json.loads(document.main_issues or "[]"),
             "source_name": document.source_name,
             "source_url": document.source_url,
+            "sections": repository.get_case_sections(document.id),
         }
+
+    def update_paragraph_simplification(
+        self,
+        case_id: str,
+        paragraph_id: str,
+        simplified_text: str,
+        validation_status: str,
+        warnings: list[str],
+    ) -> None:
+        repository, session = self._repository()
+        try:
+            repository.update_paragraph_simplification(case_id, paragraph_id, simplified_text, validation_status, warnings)
+        finally:
+            self._close_session(session)
 
     def _apply_filters(self, cases: list[dict[str, Any]], filters: dict[str, Any]) -> list[dict[str, Any]]:
         result = cases

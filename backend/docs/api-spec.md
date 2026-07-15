@@ -65,7 +65,7 @@ Returns a stored sample case. Unknown IDs return `CASE_NOT_FOUND`.
 
 ### `GET /api/cases/{case_id}/sections`
 
-Returns sections and paragraphs with stable paragraph IDs.
+Returns sections and paragraphs with stable paragraph IDs. Sections and paragraphs are loaded from SQLite after startup bootstrap.
 
 ### `POST /api/cases/{case_id}/summary`
 
@@ -90,11 +90,11 @@ Request:
 
 ### `GET /api/cases/{case_id}/simplified`
 
-Returns generated rule-based simplified paragraphs.
+Returns generated rule-based simplified paragraphs. If a paragraph was already simplified and stored, the stored result is reused.
 
 ### `POST /api/cases/{case_id}/paragraphs/{paragraph_id}/simplify`
 
-Regenerates one paragraph.
+Regenerates one paragraph and stores its simplified text, validation status, and warnings in SQLite.
 
 ### `GET /api/legal-terms/{term}`
 

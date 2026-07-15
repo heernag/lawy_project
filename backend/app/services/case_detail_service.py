@@ -39,6 +39,12 @@ class CaseDetailService:
         case = self.provider.get_case(case_id)
         if case is None:
             return None
+        stored_sections = case.get("sections") or []
+        if stored_sections:
+            return {
+                "case_id": case["case_id"],
+                "sections": stored_sections,
+            }
         sections = self.paragraph_service.split_sections(case.get("original_text", ""))
         return {
             "case_id": case["case_id"],
