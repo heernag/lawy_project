@@ -110,3 +110,23 @@ def test_split_sections_normalizes_judgment_order_headings():
     assert [section.section_type for section in sections] == ["주문", "주문"]
     assert sections[0].paragraphs[0].original_text == "피고는 원고에게 대금을 지급하라."
     assert sections[1].paragraphs[0].original_text == "소송비용은 피고가 부담한다."
+
+
+def test_split_sections_accepts_appeal_and_supreme_court_headings():
+    text = "\n".join(
+        [
+            "1. 항소취지",
+            "제1심판결을 취소한다.",
+            "2. 항소이유",
+            "원고는 사실오인을 주장한다.",
+            "3. 상고이유",
+            "피고는 법리오해를 주장한다.",
+        ]
+    )
+
+    sections = ParagraphService().split_sections(text)
+
+    assert [section.section_type for section in sections] == ["항소 취지", "항소 이유", "상고 이유"]
+    assert sections[0].paragraphs[0].original_text == "제1심판결을 취소한다."
+    assert sections[1].paragraphs[0].original_text == "원고는 사실오인을 주장한다."
+    assert sections[2].paragraphs[0].original_text == "피고는 법리오해를 주장한다."

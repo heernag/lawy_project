@@ -27,6 +27,8 @@ Overall direction is sound for the requested MVP:
   including production-like responses where validation details are hidden.
 - Address masking now has an explicit false-positive test for road-name text
   followed by an amount expression.
+- Paragraph sectioning now recognizes appeal and supreme-court procedure
+  headings such as `항소취지`, `항소이유`, and `상고이유`.
 
 Main residual risks:
 
@@ -39,6 +41,8 @@ Main residual risks:
 - Address detection is intentionally conservative and currently covers clear
   Korean road-address patterns only. It avoids masking road-name text followed
   by amount expressions such as `123만 원`.
+- Section splitting handles more fixture-backed judgment headings, but remains
+  heuristic for unseen court document formats.
 - Existing sample text and some console output can appear garbled on Windows
   terminals if the shell encoding is not UTF-8, even when tests pass.
 
@@ -416,6 +420,35 @@ Review notes:
 - Risk: Address detection is still heuristic. New address formats should be
   added with both positive and false-positive fixtures.
 
+### 14. Appeal And Supreme Court Procedure Headings
+
+Related commits:
+
+- This chapter will be tracked by the next feature commit.
+
+What changed:
+
+- Added a unit test for `항소취지`, `항소이유`, and `상고이유` headings.
+- Extended paragraph section heading recognition to normalize those headings to
+  `항소 취지`, `항소 이유`, and `상고 이유`.
+- Updated the API spec so frontend consumers know these section labels can be
+  returned.
+
+Why it matters:
+
+- Public judgments can include procedure-specific sections, especially in
+  appellate or supreme-court decisions.
+- Keeping these sections separate helps later simplification preserve whether a
+  paragraph is a party's appeal reason or a court's reasoning.
+
+Review notes:
+
+- Good: The change is covered by a failing-then-passing unit test.
+- Good: The implementation is narrowly scoped to heading aliases and does not
+  change paragraph ID generation.
+- Risk: More procedure headings may appear in real judgments and should be
+  added through fixture tests rather than broad guessing.
+
 ## Cross-Cutting Review
 
 ### Architecture
@@ -505,10 +538,10 @@ Review recommendations:
 Recommended order:
 
 1. Add a free local embedding adapter only if it can run without paid APIs.
-2. Add section-splitting fixtures for appeal/court-procedure headings.
-3. Add a structured startup diagnostics service if health checks grow further.
-4. Add a small frontend-facing error-code reference table.
-5. Add more address positive/false-positive fixtures before widening masking.
+2. Add a structured startup diagnostics service if health checks grow further.
+3. Add a small frontend-facing error-code reference table.
+4. Add more address positive/false-positive fixtures before widening masking.
+5. Add more section-splitting fixtures for court-procedure headings.
 
 ## Verification Snapshot
 
@@ -516,7 +549,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-76 passed, 1 warning
+77 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

@@ -131,6 +131,8 @@ The section splitter recognizes common headings such as `주문`, `청구 취지
 `이유`, `인정 사실`, `원고 주장`, `피고 주장`, and `법원의 판단`,
 including simple numbered forms like `1. 주문` and aliases like `기초사실`,
 `판결 주문`, `원고의 주장`, or `적용법령`.
+It also recognizes procedure headings such as `항소취지`, `항소이유`, and
+`상고이유`, normalized to `항소 취지`, `항소 이유`, and `상고 이유`.
 
 ### `POST /api/cases/{case_id}/summary`
 
