@@ -33,7 +33,12 @@ export interface ApiError {
 }
 
 export interface PrivacyDetection {
-  type: "phone_number" | "resident_registration_number" | "email" | string;
+  type:
+    | "phone_number"
+    | "resident_registration_number"
+    | "email"
+    | "address"
+    | string;
   label: string;
   masked_value: string;
 }
@@ -105,6 +110,9 @@ const data = await response.json();
 For `/api/cases/analyze`, use `sanitized_query` for any client-side preview
 after privacy detection. Keep the original user input only in local form state
 unless the user explicitly submits it for the next backend action.
+Privacy detection is local and currently covers phone numbers, resident-
+registration-number patterns, email addresses, and clear Korean road-address
+patterns.
 The backend rejects analysis queries shorter than 5 characters or longer than
 2000 characters. Display `input_warnings` as caution text, not as a legal
 conclusion.

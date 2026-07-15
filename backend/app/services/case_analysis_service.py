@@ -22,6 +22,16 @@ PRIVACY_PATTERNS: tuple[tuple[str, str, str, re.Pattern[str]], ...] = (
         "EMAIL",
         re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"),
     ),
+    (
+        "address",
+        "주소",
+        "ADDRESS",
+        re.compile(
+            r"[가-힣]+(?:특별시|광역시|특별자치시|특별자치도|도|시)\s+"
+            r"[가-힣]+(?:시|군|구)\s+"
+            r"[가-힣0-9]+(?:로|길)\s+\d+(?:-\d+)?"
+        ),
+    ),
 )
 
 PROMPT_INJECTION_PATTERNS: tuple[re.Pattern[str], ...] = (

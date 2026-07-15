@@ -40,7 +40,8 @@ Returns server health.
 Analyzes a user dispute sentence and returns category, extracted facts,
 keywords, and privacy handling fields. Response data includes `sanitized_query`
 and `privacy_detections`. The MVP masks phone numbers, resident-registration
-number patterns, and email addresses locally with regular expressions.
+number patterns, email addresses, and clear Korean road-address patterns
+locally with regular expressions.
 Queries shorter than 5 characters or longer than 2000 characters return
 `INVALID_REQUEST`. Prompt-injection-like phrases are not executed as
 instructions; they are returned as `input_warnings` for client display.

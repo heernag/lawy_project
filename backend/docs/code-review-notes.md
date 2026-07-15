@@ -30,8 +30,8 @@ Main residual risks:
   legally complete interpretation engine.
 - Validation details currently include Pydantic error metadata. This is useful
   for development, but production may want a less verbose response.
-- Address detection is not implemented yet because Korean address detection can
-  create false positives if added too broadly.
+- Address detection is intentionally conservative and currently covers clear
+  Korean road-address patterns only.
 - Existing sample text and some console output can appear garbled on Windows
   terminals if the shell encoding is not UTF-8, even when tests pass.
 
@@ -232,6 +232,7 @@ What changed:
 - Added `privacy_detections`.
 - Locally masks phone numbers, resident-registration-number patterns, and email
   addresses with protection tokens.
+- Later added conservative masking for clear Korean road-address patterns.
 
 Why it matters:
 
@@ -243,8 +244,8 @@ Review notes:
 
 - Good: Detection is local and free.
 - Good: The original query is not added to long-term storage by this feature.
-- Risk: Address masking is still missing. Add it carefully with tests because
-  Korean address patterns can overlap normal factual text.
+- Risk: Address masking is intentionally narrow. This avoids broad false
+  positives, but it will not catch every Korean address form.
 
 ### 9. Case Analysis Input Safety
 
@@ -378,7 +379,7 @@ Current strengths:
 Review recommendations:
 
 - Consider environment-based validation detail verbosity before production.
-- Add conservative address detection later with false-positive tests.
+- Expand address detection only with false-positive tests.
 - Keep logs free of raw user case text.
 
 ### Legal Safety
@@ -401,10 +402,10 @@ Review recommendations:
 
 Recommended order:
 
-1. Add conservative Korean address privacy detection with tests.
-2. Add environment-based validation detail verbosity.
-3. Add malformed JSON and missing-field API tests.
-4. Add more section-splitting fixtures for different judgment formats.
+1. Add environment-based validation detail verbosity.
+2. Add malformed JSON and missing-field API tests.
+3. Add more section-splitting fixtures for different judgment formats.
+4. Add address false-positive tests before expanding address detection.
 5. Add a free local embedding adapter only if it can run without paid APIs.
 
 ## Verification Snapshot
@@ -413,7 +414,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-63 passed, 1 warning
+65 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

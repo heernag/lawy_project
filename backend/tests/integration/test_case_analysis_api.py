@@ -61,6 +61,20 @@ def test_analyze_api_returns_sanitized_query_and_privacy_detections():
     }
 
 
+def test_analyze_api_masks_clear_korean_road_address():
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/cases/analyze",
+        json={"query": "Refund dispute happened at 서울시 강남구 테헤란로 123."},
+    )
+
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert data["sanitized_query"] == "Refund dispute happened at [ADDRESS_1]."
+    assert {item["type"] for item in data["privacy_detections"]} >= {"address"}
+
+
 def test_analyze_api_warns_about_prompt_injection_like_text():
     client = TestClient(create_app())
 
