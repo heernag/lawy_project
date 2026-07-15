@@ -78,6 +78,8 @@ What changed:
 - Added detailed case lookup.
 - Split original judgment text into sections and paragraphs.
 - Persisted sections and paragraph simplification state.
+- Later expanded the splitter to recognize simple numbered headings such as
+  `1. 주문`, `2. 청구취지`, and `가. 이유`.
 
 Why it matters:
 
@@ -90,6 +92,8 @@ Review notes:
 
 - Good: Paragraph-level storage matches the frontend's likely interaction model.
 - Good: Stored simplification state avoids unnecessary recomputation.
+- Good: Numbered heading fixtures reduce the chance of only supporting one
+  sample text format.
 - Risk: Section splitting is still heuristic. More real judgment formats will
   need fixture-based tests.
 
@@ -405,11 +409,11 @@ Review recommendations:
 
 Recommended order:
 
-1. Add more section-splitting fixtures for different judgment formats.
-2. Add address false-positive tests before expanding address detection.
-3. Add a free local embedding adapter only if it can run without paid APIs.
-4. Add a lightweight startup/data-bootstrap health diagnostic.
-5. Add response examples for validation errors in the frontend guide.
+1. Add address false-positive tests before expanding address detection.
+2. Add a free local embedding adapter only if it can run without paid APIs.
+3. Add a lightweight startup/data-bootstrap health diagnostic.
+4. Add response examples for validation errors in the frontend guide.
+5. Add more section-splitting fixtures for party-argument headings.
 
 ## Verification Snapshot
 
@@ -417,7 +421,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-69 passed, 1 warning
+70 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

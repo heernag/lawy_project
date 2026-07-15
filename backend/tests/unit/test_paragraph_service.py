@@ -19,3 +19,23 @@ def test_split_sections_returns_original_section_when_headings_are_missing():
     assert len(sections) == 1
     assert sections[0].section_type == "원문"
     assert sections[0].paragraphs[0].original_text == text
+
+
+def test_split_sections_accepts_numbered_common_headings():
+    text = "\n".join(
+        [
+            "1. 주문",
+            "피고는 원고에게 100만 원을 지급하라.",
+            "2. 청구취지",
+            "원고는 손해배상을 구한다.",
+            "가. 이유",
+            "다음과 같은 이유로 판단한다.",
+        ]
+    )
+
+    sections = ParagraphService().split_sections(text)
+
+    assert [section.section_type for section in sections] == ["주문", "청구 취지", "이유"]
+    assert sections[0].paragraphs[0].original_text == "피고는 원고에게 100만 원을 지급하라."
+    assert sections[1].paragraphs[0].original_text == "원고는 손해배상을 구한다."
+    assert sections[2].paragraphs[0].original_text == "다음과 같은 이유로 판단한다."

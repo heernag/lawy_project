@@ -90,6 +90,8 @@ Returns a stored sample case. Unknown IDs return `CASE_NOT_FOUND`.
 ### `GET /api/cases/{case_id}/sections`
 
 Returns sections and paragraphs with stable paragraph IDs. Sections and paragraphs are loaded from SQLite after startup bootstrap.
+The section splitter recognizes common headings such as `주문`, `청구 취지`,
+and `이유`, including simple numbered forms like `1. 주문`.
 
 ### `POST /api/cases/{case_id}/summary`
 

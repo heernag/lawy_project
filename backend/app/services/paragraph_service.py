@@ -1,3 +1,4 @@
+import re
 from dataclasses import asdict, dataclass
 
 @dataclass
@@ -28,6 +29,7 @@ class ParagraphService:
     HEADINGS = [
         "주문",
         "청구 취지",
+        "청구취지",
         "이유",
         "인정 사실",
         "원고 주장",
@@ -36,6 +38,9 @@ class ParagraphService:
         "결론",
         "관련 법령",
     ]
+    HEADING_ALIASES = {
+        "청구취지": "청구 취지",
+    }
 
     def split_sections(self, original_text: str) -> list[SectionResult]:
         lines = [line.strip() for line in original_text.splitlines() if line.strip()]
@@ -44,10 +49,11 @@ class ParagraphService:
         current_lines: list[str] = []
 
         for line in lines:
-            if line in self.HEADINGS:
+            heading = self._normalize_heading(line)
+            if heading:
                 if current_heading is not None:
                     sections.append((current_heading, current_lines))
-                current_heading = line
+                current_heading = heading
                 current_lines = []
             else:
                 current_lines.append(line)
@@ -59,6 +65,12 @@ class ParagraphService:
             sections = [("원문", [original_text.strip()] if original_text.strip() else [])]
 
         return [self._build_section(section_order, heading, section_lines) for section_order, (heading, section_lines) in enumerate(sections, start=1)]
+
+    def _normalize_heading(self, line: str) -> str | None:
+        candidate = re.sub(r"^(?:\d+|[가-힣])[\).]\s*", "", line).strip()
+        if candidate in self.HEADINGS:
+            return self.HEADING_ALIASES.get(candidate, candidate)
+        return None
 
     def _build_section(self, section_order: int, heading: str, lines: list[str]) -> SectionResult:
         paragraphs = [
