@@ -25,6 +25,16 @@ CORS_ORIGINS=http://localhost:5173
 ## TypeScript Types
 
 ```typescript
+export type ApiErrorCode =
+  | "INVALID_REQUEST"
+  | "CASE_NOT_FOUND"
+  | "CASE_PROVIDER_ERROR"
+  | "SEARCH_FAILED"
+  | "SIMPLIFICATION_FAILED"
+  | "VALIDATION_FAILED"
+  | "RATE_LIMIT_EXCEEDED"
+  | "INTERNAL_SERVER_ERROR";
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T | null;
@@ -32,7 +42,7 @@ export interface ApiResponse<T> {
 }
 
 export interface ApiError {
-  code: string;
+  code: ApiErrorCode | string;
   message: string;
   details: unknown | null;
 }
@@ -131,6 +141,19 @@ Search `query` is normalized by trimming and collapsing repeated whitespace;
 the normalized value must be 2 to 500 characters.
 Date filters must be `YYYY-MM-DD`; when both dates are present, `start_date`
 must be earlier than or equal to `end_date`.
+
+## Error Code Reference
+
+| Code | Frontend handling |
+| --- | --- |
+| `INVALID_REQUEST` | Ask the user to correct input or request fields. |
+| `CASE_NOT_FOUND` | Show a not-found state for the selected judgment or paragraph. |
+| `CASE_PROVIDER_ERROR` | Show a temporary data-source error and allow retry. |
+| `SEARCH_FAILED` | Show a search retry message without implying no cases exist. |
+| `SIMPLIFICATION_FAILED` | Keep the original paragraph visible and offer retry. |
+| `VALIDATION_FAILED` | Mark the generated explanation as review-required. |
+| `RATE_LIMIT_EXCEEDED` | Ask the user to wait before retrying. |
+| `INTERNAL_SERVER_ERROR` | Show a generic server error message. |
 
 ## Validation Error Examples
 

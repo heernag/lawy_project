@@ -29,6 +29,8 @@ Overall direction is sound for the requested MVP:
   followed by an amount expression.
 - Paragraph sectioning now recognizes appeal and supreme-court procedure
   headings such as `항소취지`, `항소이유`, and `상고이유`.
+- Error codes now have an exported `ALL_ERROR_CODES` contract and a
+  frontend-facing reference table.
 
 Main residual risks:
 
@@ -38,6 +40,8 @@ Main residual risks:
   legally complete interpretation engine.
 - Validation details include Pydantic metadata only in development-like
   environments. Production-like environments return `details: null`.
+- Frontend code should branch on stable error codes, not exact validation
+  details.
 - Address detection is intentionally conservative and currently covers clear
   Korean road-address patterns only. It avoids masking road-name text followed
   by amount expressions such as `123만 원`.
@@ -449,6 +453,37 @@ Review notes:
 - Risk: More procedure headings may appear in real judgments and should be
   added through fixture tests rather than broad guessing.
 
+### 15. Error Code Contract And Frontend Reference
+
+Related commits:
+
+- This chapter will be tracked by the next feature commit.
+
+What changed:
+
+- Added `ALL_ERROR_CODES` to `app.core.errors` as the stable exported list of
+  backend error codes.
+- Added a unit test that locks the public error-code tuple to the existing
+  string constants.
+- Added a TypeScript `ApiErrorCode` union and an error-code handling table to
+  the frontend integration guide.
+- Added a short note to the API spec explaining that error codes are managed as
+  backend string constants.
+
+Why it matters:
+
+- The frontend team can treat `error.code` as the stable API contract.
+- New or renamed error codes are more likely to be caught in tests and docs
+  before they surprise the UI.
+
+Review notes:
+
+- Good: The change keeps the existing response shape and does not alter any API
+  behavior.
+- Good: The contract is free/local and does not introduce external services.
+- Risk: The TypeScript union in the docs is still manually copied. A later
+  generated client could eliminate that duplication.
+
 ## Cross-Cutting Review
 
 ### Architecture
@@ -539,9 +574,10 @@ Recommended order:
 
 1. Add a free local embedding adapter only if it can run without paid APIs.
 2. Add a structured startup diagnostics service if health checks grow further.
-3. Add a small frontend-facing error-code reference table.
-4. Add more address positive/false-positive fixtures before widening masking.
-5. Add more section-splitting fixtures for court-procedure headings.
+3. Add more address positive/false-positive fixtures before widening masking.
+4. Add more section-splitting fixtures for court-procedure headings.
+5. Add a generated OpenAPI/TypeScript contract check if the frontend starts
+   depending on generated clients.
 
 ## Verification Snapshot
 
@@ -549,7 +585,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-77 passed, 1 warning
+78 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

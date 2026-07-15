@@ -179,6 +179,9 @@ Returns locally similar stored sample cases. The score is not a prediction of li
 
 ## Error Codes
 
+The backend keeps these as string constants in `app.core.errors` and exports
+the stable `ALL_ERROR_CODES` tuple for tests and documentation checks.
+
 - `INVALID_REQUEST`
 - `CASE_NOT_FOUND`
 - `CASE_PROVIDER_ERROR`
