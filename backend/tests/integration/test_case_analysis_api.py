@@ -25,3 +25,28 @@ def test_analyze_api_rejects_blank_query():
 
     assert response.status_code == 400
     assert response.json()["error"]["code"] == "INVALID_REQUEST"
+
+
+def test_analyze_api_returns_sanitized_query_and_privacy_detections():
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/cases/analyze",
+        json={
+            "query": (
+                "Phone 010-1234-5678, resident number 900101-1234567, "
+                "email user@example.com."
+            )
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert data["sanitized_query"] == (
+        "Phone [PHONE_1], resident number [RRN_1], email [EMAIL_1]."
+    )
+    assert {item["type"] for item in data["privacy_detections"]} == {
+        "phone_number",
+        "resident_registration_number",
+        "email",
+    }

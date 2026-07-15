@@ -32,6 +32,26 @@ export interface ApiError {
   details: unknown | null;
 }
 
+export interface PrivacyDetection {
+  type: "phone_number" | "resident_registration_number" | "email" | string;
+  label: string;
+  masked_value: string;
+}
+
+export interface CaseAnalysisResult {
+  category: string;
+  sub_category: string;
+  sanitized_query: string;
+  parties: string[];
+  dispute_target: string;
+  facts: string[];
+  legal_issues: string[];
+  search_keywords: string[];
+  legal_terms: string[];
+  privacy_detections: PrivacyDetection[];
+  privacy_warnings: string[];
+}
+
 export interface CaseSearchRequest {
   query: string;
   category?: string | null;
@@ -75,6 +95,10 @@ const response = await fetch("http://localhost:8000/api/cases/search", {
 
 const data = await response.json();
 ```
+
+For `/api/cases/analyze`, use `sanitized_query` for any client-side preview
+after privacy detection. Keep the original user input only in local form state
+unless the user explicitly submits it for the next backend action.
 
 ## User Notice
 

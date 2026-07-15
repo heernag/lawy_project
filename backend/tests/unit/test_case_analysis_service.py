@@ -21,3 +21,24 @@ def test_analyze_warns_about_possible_phone_number():
 
     assert result.privacy_warnings
     assert "전화번호" in result.privacy_warnings[0]
+
+
+def test_analyze_masks_detected_privacy_values():
+    query = (
+        "Please review my dispute. Phone 010-1234-5678, "
+        "resident number 900101-1234567, email user@example.com."
+    )
+
+    result = CaseAnalysisService().analyze(query)
+
+    assert "010-1234-5678" not in result.sanitized_query
+    assert "900101-1234567" not in result.sanitized_query
+    assert "user@example.com" not in result.sanitized_query
+    assert "[PHONE_1]" in result.sanitized_query
+    assert "[RRN_1]" in result.sanitized_query
+    assert "[EMAIL_1]" in result.sanitized_query
+    assert {item.type for item in result.privacy_detections} == {
+        "phone_number",
+        "resident_registration_number",
+        "email",
+    }

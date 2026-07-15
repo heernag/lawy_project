@@ -34,6 +34,11 @@ Returns server health.
 
 ### `POST /api/cases/analyze`
 
+Analyzes a user dispute sentence and returns category, extracted facts,
+keywords, and privacy handling fields. Response data includes `sanitized_query`
+and `privacy_detections`. The MVP masks phone numbers, resident-registration
+number patterns, and email addresses locally with regular expressions.
+
 Request:
 
 ```json

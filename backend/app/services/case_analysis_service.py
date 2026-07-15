@@ -1,23 +1,70 @@
 import re
 
-from app.schemas.case_analysis import CaseAnalysisResult
+from app.schemas.case_analysis import CaseAnalysisResult, PrivacyDetection
+
+
+PRIVACY_PATTERNS: tuple[tuple[str, str, str, re.Pattern[str]], ...] = (
+    (
+        "resident_registration_number",
+        "주민등록번호",
+        "RRN",
+        re.compile(r"\d{6}-\d{7}"),
+    ),
+    (
+        "phone_number",
+        "전화번호",
+        "PHONE",
+        re.compile(r"01[016789]-?\d{3,4}-?\d{4}"),
+    ),
+    (
+        "email",
+        "이메일",
+        "EMAIL",
+        re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"),
+    ),
+)
 
 
 class CaseAnalysisService:
     def analyze(self, query: str) -> CaseAnalysisResult:
         normalized = query.strip()
+        sanitized_query, privacy_detections = self._mask_privacy_values(normalized)
         category, sub_category = self._classify(normalized)
         return CaseAnalysisResult(
             category=category,
             sub_category=sub_category,
+            sanitized_query=sanitized_query,
             parties=self._extract_parties(normalized),
             dispute_target=self._extract_dispute_target(normalized),
             facts=self._extract_facts(normalized),
             legal_issues=self._extract_legal_issues(normalized, sub_category),
             search_keywords=self._extract_keywords(normalized, sub_category),
             legal_terms=self._extract_legal_terms(normalized, sub_category),
+            privacy_detections=privacy_detections,
             privacy_warnings=self._privacy_warnings(normalized),
         )
+
+    def _mask_privacy_values(self, query: str) -> tuple[str, list[PrivacyDetection]]:
+        sanitized = query
+        detections: list[PrivacyDetection] = []
+        counters: dict[str, int] = {}
+
+        for detection_type, label, token_prefix, pattern in PRIVACY_PATTERNS:
+            def replace(match: re.Match[str]) -> str:
+                counters[token_prefix] = counters.get(token_prefix, 0) + 1
+                masked_value = f"[{token_prefix}_{counters[token_prefix]}]"
+                detections.append(
+                    PrivacyDetection(
+                        type=detection_type,
+                        label=label,
+                        masked_value=masked_value,
+                    )
+                )
+                return masked_value
+
+            sanitized = pattern.sub(replace, sanitized)
+
+        return sanitized, detections
 
     def _classify(self, query: str) -> tuple[str, str]:
         if any(keyword in query for keyword in ["해고", "임금", "퇴직금"]):
