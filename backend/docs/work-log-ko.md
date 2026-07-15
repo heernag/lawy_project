@@ -128,29 +128,37 @@ Easy Case Law Backend
 - 남은 필수 작업을 `미커밋 변경 스테이징`, `장 단위 커밋`, `커밋 후 전체 테스트`
   로 정리했다.
 
+### 7. 미커밋 작업 커밋 완료
+
+생성된 커밋:
+
+- `a56ed3d feat: add free local hash embeddings`
+- `4cabfd2 docs: verify README local setup`
+- `1aa029f docs: add frontend handoff checklist`
+
+작업 내용:
+
+- 무료 로컬 해시 임베딩 검색 기능을 별도 커밋으로 정리했다.
+- README 실행 검증과 `local_hash` 설정 변경을 별도 커밋으로 정리했다.
+- Bruno 컬렉션, 프론트 흐름 가이드, API 체크리스트, MVP 최종 점검표를 문서 커밋으로
+  정리했다.
+- 커밋 후 전체 테스트를 다시 실행했다.
+
+검증:
+
+```text
+python -m pytest -q
+85 passed, 1 warning
+```
+
 ## 현재 미커밋 작업
 
-- `backend/app/providers/base_embedding_provider.py`
-- `backend/app/providers/local_hash_embedding_provider.py`
-- `backend/app/services/local_similarity_service.py`
-- `backend/app/core/config.py`
-- `backend/.env.example`
-- `backend/README.md`
-- `backend/tests/unit/test_local_hash_embedding_provider.py`
-- `backend/tests/unit/test_local_similarity_service.py`
-- `backend/tests/unit/test_settings.py`
-- `backend/docs/api-spec.md`
-- `backend/docs/frontend-integration.md`
-- `backend/docs/code-review-notes.md`
-- `backend/docs/progress-summary.md`
-- `backend/docs/progress-summary-ko.md`
 - `backend/docs/api-checklist-ko.md`
-- `backend/docs/frontend-flow-ko.md`
 - `backend/docs/mvp-final-check-ko.md`
+- `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
-- `backend/bruno`
 
 ## 다음에 이어서 할 작업
 
-1. Git 사용 가능 시 미커밋 작업을 장 단위로 커밋한다.
-2. Git 사용 가능 전까지 최종 문서와 체크리스트를 계속 정리한다.
+1. 최종 점검표 갱신 문서를 커밋한다.
+2. 필요 시 완전히 새 환경에서 의존성 설치부터 재검증한다.
