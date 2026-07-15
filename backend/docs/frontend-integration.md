@@ -11,6 +11,11 @@ Swagger: `http://localhost:8000/docs`
 
 OpenAPI JSON: `http://localhost:8000/openapi.json`
 
+Health check: `GET http://localhost:8000/api/health`
+
+Use `data.checks.sample_data_loaded` to confirm the MVP sample judgments were
+loaded before testing search screens.
+
 Set CORS origins in `.env`:
 
 ```env

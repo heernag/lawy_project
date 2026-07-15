@@ -39,6 +39,23 @@ to avoid exposing internal validation metadata.
 ### `GET /api/health`
 
 Returns server health.
+The response includes lightweight diagnostics for the case provider and sample
+data bootstrap.
+
+```json
+{
+  "status": "ok",
+  "checks": {
+    "case_provider": "ok",
+    "case_count": 3,
+    "sample_data_loaded": true
+  }
+}
+```
+
+If the case provider cannot be queried, `status` becomes `degraded` and the
+provider check returns a generic failure message without exposing internal
+exception details.
 
 ### `POST /api/cases/analyze`
 

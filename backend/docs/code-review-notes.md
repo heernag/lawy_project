@@ -21,6 +21,8 @@ Overall direction is sound for the requested MVP:
 - Common API responses are used for success and error cases.
 - Recent input-safety work improved privacy masking, prompt-injection warnings,
   search validation, date validation, and request validation errors.
+- Health checks now include lightweight case-provider and sample-data bootstrap
+  diagnostics.
 
 Main residual risks:
 
@@ -365,6 +367,18 @@ The architecture is moving in the right direction:
 This separation should continue. Avoid adding direct DB calls to routes or
 putting AI/search/data-provider logic into API files.
 
+### Operations
+
+The health endpoint returns lightweight diagnostics:
+
+- `case_provider`: whether the configured provider can be queried.
+- `case_count`: how many stored cases are visible to the provider.
+- `sample_data_loaded`: whether at least one MVP sample judgment is available.
+
+This is intentionally lightweight and does not call external services.
+Provider failures return `degraded` with a generic message so internal exception
+details are not exposed.
+
 ### Testing
 
 The test suite has grown chapter by chapter and currently covers:
@@ -427,9 +441,9 @@ Recommended order:
 
 1. Add address false-positive tests before expanding address detection.
 2. Add a free local embedding adapter only if it can run without paid APIs.
-3. Add a lightweight startup/data-bootstrap health diagnostic.
-4. Add response examples for validation errors in the frontend guide.
-5. Add section-splitting fixtures for appeal/court-procedure headings.
+3. Add response examples for validation errors in the frontend guide.
+4. Add section-splitting fixtures for appeal/court-procedure headings.
+5. Add a structured startup diagnostics service if health checks grow further.
 
 ## Verification Snapshot
 
@@ -437,7 +451,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-74 passed, 1 warning
+75 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.
