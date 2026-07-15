@@ -27,5 +27,18 @@ def bootstrap_database(engine: Engine, sample_path: Path, legal_terms_path: Path
             repository.upsert_case(case)
             sections = [section.to_dict() for section in paragraph_service.split_sections(case.get("original_text", ""))]
             repository.upsert_sections(case["case_id"], sections)
+            repository.upsert_case_search_index(case["case_id"], _build_search_text(case))
     finally:
         session.close()
+
+
+def _build_search_text(case: dict) -> str:
+    return " ".join(
+        [
+            case.get("case_number", ""),
+            case.get("case_name", ""),
+            case.get("summary", ""),
+            " ".join(case.get("main_issues", [])),
+            case.get("original_text", ""),
+        ]
+    )

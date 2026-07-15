@@ -56,6 +56,7 @@ class CaseSearchService:
         for case in cases:
             document = " ".join(
                 [
+                    case.get("search_text", ""),
                     case.get("case_name", ""),
                     case.get("summary", ""),
                     " ".join(case.get("main_issues", [])),

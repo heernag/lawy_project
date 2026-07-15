@@ -68,6 +68,7 @@ class DbCaseProvider(CaseProvider):
             "source_name": document.source_name,
             "source_url": document.source_url,
             "sections": repository.get_case_sections(document.id),
+            "search_text": repository.get_case_search_index(document.id),
         }
 
     def update_paragraph_simplification(

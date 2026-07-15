@@ -59,6 +59,8 @@ Request:
 }
 ```
 
+Search uses exact case-number matching, metadata filters, keyword overlap, and locally stored search-index text from SQLite. It does not call paid embedding APIs.
+
 ### `GET /api/cases/{case_id}`
 
 Returns a stored sample case. Unknown IDs return `CASE_NOT_FOUND`.

@@ -26,6 +26,7 @@ def test_bootstrap_database_creates_tables_and_loads_sample_cases(tmp_path):
     assert sections[0]["section_type"] == "주문"
     assert sections[0]["paragraphs"][0]["paragraph_id"] == "paragraph-1-1"
     assert repository.get_legal_term("기각")["source"] == "MVP built-in glossary"
+    assert "중고 노트북" in repository.get_case_search_index("sample-001")
 
 
 def test_db_case_provider_reads_cases_from_repository():

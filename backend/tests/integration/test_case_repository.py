@@ -127,3 +127,31 @@ def test_case_repository_upserts_and_reads_case_legal_terms():
     assert terms[0]["term"] == "손해배상"
     assert terms[0]["paragraph_id"] == "paragraph-1-1"
     assert terms[0]["easy_definition"] == "손해를 금전 등으로 메우는 것입니다."
+
+
+def test_case_repository_upserts_and_reads_case_search_index():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(bind=engine)
+    session = sessionmaker(bind=engine)()
+    repository = CaseRepository(session)
+    repository.upsert_case(
+        {
+            "case_id": "sample-index",
+            "case_number": "샘플-인덱스-001",
+            "case_name": "검색 인덱스 사건",
+            "court_name": "샘플 법원",
+            "decision_date": "2025-01-01",
+            "category": "민사",
+            "judgment_result": "인용",
+            "order_text": "피고는 원고에게 지급하라.",
+            "original_text": "주문\n피고는 원고에게 지급하라.",
+            "summary": "검색 인덱스 샘플 사건입니다.",
+            "main_issues": ["검색 인덱스"],
+            "source_name": "MVP sample data",
+            "source_url": "",
+        }
+    )
+
+    repository.upsert_case_search_index("sample-index", "검색 인덱스 샘플 사건입니다.")
+
+    assert repository.get_case_search_index("sample-index") == "검색 인덱스 샘플 사건입니다."

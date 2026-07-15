@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.case import CaseDocument, CaseLegalTerm, CaseParagraph, CaseSection, CaseSummary, LegalTerm
+from app.models.case import CaseDocument, CaseEmbedding, CaseLegalTerm, CaseParagraph, CaseSection, CaseSummary, LegalTerm
 
 
 class CaseRepository:
@@ -204,6 +204,29 @@ class CaseRepository:
             item["paragraph_id"] = self._public_id(row.paragraph_id) if row.paragraph_id else None
             results.append(item)
         return results
+
+    def upsert_case_search_index(self, case_id: str, search_text: str) -> CaseEmbedding | None:
+        if self.get_case(case_id) is None:
+            return None
+        embedding_id = f"{case_id}:case-search-text"
+        row = self.session.get(CaseEmbedding, embedding_id) or CaseEmbedding(
+            id=embedding_id,
+            case_id=case_id,
+            paragraph_id=None,
+            document_type="case_search_text",
+            embedding_reference="",
+        )
+        row.embedding_reference = search_text
+        self.session.add(row)
+        self.session.commit()
+        self.session.refresh(row)
+        return row
+
+    def get_case_search_index(self, case_id: str) -> str:
+        row = self.session.get(CaseEmbedding, f"{case_id}:case-search-text")
+        if row is None:
+            return ""
+        return row.embedding_reference
 
     def _legal_term_to_dict(self, row: LegalTerm) -> dict[str, Any]:
         return {

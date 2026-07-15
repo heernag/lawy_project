@@ -8,6 +8,8 @@ The MVP glossary is stored in `data/legal_terms.json` and loaded into the `legal
 
 When a case's legal terms are extracted, the case-term relationship and paragraph context are stored in `case_legal_terms`. This does not add new legal facts; it only records where built-in glossary terms appear in stored case text.
 
+For MVP search, `case_embeddings` stores local search-index text, not paid external embeddings. The value is built from stored sample case metadata, summary, issues, and original text.
+
 The sample data is for development and testing. It does not claim to be an official court judgment, and sample case numbers are intentionally marked as sample IDs.
 
 The backend does not crawl websites.
