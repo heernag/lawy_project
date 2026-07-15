@@ -110,6 +110,8 @@ The backend rejects analysis queries shorter than 5 characters or longer than
 conclusion.
 For search, send `page >= 1` and `1 <= size <= 50`. Invalid request bodies are
 returned as HTTP 400 with `error.code === "INVALID_REQUEST"`.
+Date filters must be `YYYY-MM-DD`; when both dates are present, `start_date`
+must be earlier than or equal to `end_date`.
 
 ## User Notice
 

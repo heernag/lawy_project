@@ -46,6 +46,40 @@ def test_search_api_returns_common_error_for_invalid_size():
     assert body["error"]["code"] == "INVALID_REQUEST"
 
 
+def test_search_api_returns_common_error_for_invalid_date_format():
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/cases/search",
+        json={"query": "deposit dispute", "start_date": "2025/01/01", "page": 1, "size": 10},
+    )
+
+    assert response.status_code == 400
+    body = response.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "INVALID_REQUEST"
+
+
+def test_search_api_returns_common_error_for_reversed_date_range():
+    client = TestClient(create_app())
+
+    response = client.post(
+        "/api/cases/search",
+        json={
+            "query": "deposit dispute",
+            "start_date": "2025-12-31",
+            "end_date": "2025-01-01",
+            "page": 1,
+            "size": 10,
+        },
+    )
+
+    assert response.status_code == 400
+    body = response.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "INVALID_REQUEST"
+
+
 def test_similar_api_returns_cases_except_source_case():
     client = TestClient(create_app())
 
