@@ -61,7 +61,7 @@ Easy Case Law Backend
 | `.env` Git 제외 | 완료 | `.env.example`만 제공 |
 | 프론트 연동 문서 | 완료 | `frontend-integration.md`, `frontend-flow-ko.md`, TypeScript 계약 예시 테스트 |
 | Bruno 테스트 컬렉션 | 완료 | `backend/bruno` |
-| README 실행 가이드 | 완료 | README 갱신 및 테스트 명령 검증 |
+| README 실행 가이드 | 완료 | README 갱신, 헬스 체크/검색 예시 추가, 테스트 명령 검증 |
 | 모든 변경 커밋 | 완료 | 최근 작업은 장 단위 커밋으로 정리됨 |
 
 ## 커밋 완료 내역

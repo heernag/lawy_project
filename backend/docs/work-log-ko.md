@@ -311,16 +311,45 @@ python -m pytest tests\integration\test_openapi_contract.py -q
 3 passed, 1 warning
 ```
 
+### 14. README 기준 실행 점검
+
+수정한 파일:
+
+- `backend/README.md`
+- `backend/docs/progress-summary-ko.md`
+- `backend/docs/work-log-ko.md`
+- `backend/docs/mvp-final-check-ko.md`
+
+작업 내용:
+
+- README 기준 전체 테스트 명령 `python -m pytest -v`를 다시 실행했다.
+- README 기준 앱 생성과 OpenAPI 핵심 경로 노출을 확인했다.
+- README에 서버 실행 후 확인할 헬스 체크와 OpenAPI 확인 명령을 추가했다.
+- README에 대표 검색 API 호출 예시를 추가했다.
+- README에 현재 검증된 테스트 결과와 기존 TestClient 경고 설명을 추가했다.
+
+검증:
+
+```text
+python -m pytest -v
+93 passed, 1 warning
+```
+
+```text
+create_app()
+Easy Case Law Backend
+/api/health: True
+/api/cases/search: True
+```
+
 ## 이번 챕터 변경 파일
 
-- `backend/app/core/responses.py`
-- `backend/app/api/routes/cases.py`
-- `backend/tests/integration/test_openapi_contract.py`
+- `backend/README.md`
 - `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
 - `backend/docs/mvp-final-check-ko.md`
 
 ## 다음에 이어서 할 작업
 
-1. 필요 시 완전히 새 환경에서 의존성 설치부터 재검증한다.
-2. README 기준 실행 명령을 깨끗한 확인 절차로 다시 점검한다.
+1. 최종 코드리뷰 문서를 최신 커밋 기준으로 갱신한다.
+2. 마지막 전체 테스트와 Git 상태를 확인한다.

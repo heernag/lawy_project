@@ -15,6 +15,23 @@ python -m uvicorn app.main:app --reload
 
 On startup, the app creates the SQLite tables and loads `data/sample_cases.json` and `data/legal_terms.json` into the local database.
 
+Quick local checks after startup:
+
+```powershell
+Invoke-RestMethod http://localhost:8000/api/health
+Invoke-RestMethod http://localhost:8000/openapi.json
+```
+
+Example search request:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri http://localhost:8000/api/cases/search `
+  -ContentType "application/json" `
+  -Body '{"query":"중고 노트북 하자 환불","page":1,"size":10}'
+```
+
 Swagger:
 
 ```text
@@ -45,6 +62,14 @@ backend/docs/frontend-flow-ko.md
 cd backend
 python -m pytest -v
 ```
+
+Current verified result:
+
+```text
+93 passed, 1 warning
+```
+
+The warning is the existing FastAPI/Starlette TestClient deprecation warning.
 
 ## Environment
 
