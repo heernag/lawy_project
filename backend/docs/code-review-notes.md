@@ -28,8 +28,8 @@ Main residual risks:
   free MVP, but recall and classification quality are limited.
 - Legal-term extraction and simplification are deterministic MVP logic, not a
   legally complete interpretation engine.
-- Validation details currently include Pydantic error metadata. This is useful
-  for development, but production may want a less verbose response.
+- Validation details include Pydantic metadata only in development-like
+  environments. Production-like environments return `details: null`.
 - Address detection is intentionally conservative and currently covers clear
   Korean road-address patterns only.
 - Existing sample text and some console output can appear garbled on Windows
@@ -296,8 +296,9 @@ Review notes:
 - Good: Common `INVALID_REQUEST` responses reduce frontend branching.
 - Good: JSON-safe details fix prevents custom validators from breaking error
   responses.
-- Risk: `details` can expose internal field-level validation information. This
-  is fine for development, but production may want a summarized version.
+- Good: Production-like environments hide internal validation metadata by
+  returning `details: null`.
+- Risk: Frontend code must treat `error.details` as optional.
 
 ### 11. Search Query Normalization
 
@@ -378,7 +379,7 @@ Current strengths:
 
 Review recommendations:
 
-- Consider environment-based validation detail verbosity before production.
+- Keep frontend error handling resilient when `error.details` is `null`.
 - Expand address detection only with false-positive tests.
 - Keep logs free of raw user case text.
 
@@ -402,11 +403,11 @@ Review recommendations:
 
 Recommended order:
 
-1. Add environment-based validation detail verbosity.
-2. Add malformed JSON and missing-field API tests.
-3. Add more section-splitting fixtures for different judgment formats.
-4. Add address false-positive tests before expanding address detection.
-5. Add a free local embedding adapter only if it can run without paid APIs.
+1. Add malformed JSON and missing-field API tests.
+2. Add more section-splitting fixtures for different judgment formats.
+3. Add address false-positive tests before expanding address detection.
+4. Add a free local embedding adapter only if it can run without paid APIs.
+5. Add a lightweight startup/data-bootstrap health diagnostic.
 
 ## Verification Snapshot
 
@@ -414,7 +415,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-65 passed, 1 warning
+67 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

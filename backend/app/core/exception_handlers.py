@@ -2,6 +2,7 @@ from fastapi import Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+from app.core.config import get_settings
 from app.core.errors import INVALID_REQUEST
 from app.core.responses import api_error
 
@@ -23,11 +24,13 @@ def _json_safe_errors(errors: list[dict]) -> list[dict]:
 async def request_validation_exception_handler(
     request: Request, exc: RequestValidationError
 ) -> JSONResponse:
+    settings = get_settings()
+    include_details = settings.app_env.lower() in {"development", "local", "test"}
     return JSONResponse(
         status_code=400,
         content=api_error(
             INVALID_REQUEST,
             "요청 값이 올바르지 않습니다.",
-            details=_json_safe_errors(exc.errors()),
+            details=_json_safe_errors(exc.errors()) if include_details else None,
         ),
     )

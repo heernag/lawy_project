@@ -28,6 +28,9 @@ Errors use:
 
 Request body validation errors also use this common format with HTTP 400 and
 `INVALID_REQUEST`; the frontend does not need a separate FastAPI 422 parser.
+Validation `details` are included in `development`, `local`, and `test`
+environments. In production-like environments, `details` are returned as `null`
+to avoid exposing internal validation metadata.
 
 ## Endpoints
 
