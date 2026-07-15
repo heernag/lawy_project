@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.case import CaseDocument, CaseParagraph, CaseSection, CaseSummary, LegalTerm
+from app.models.case import CaseDocument, CaseLegalTerm, CaseParagraph, CaseSection, CaseSummary, LegalTerm
 
 
 class CaseRepository:
@@ -169,6 +169,41 @@ class CaseRepository:
     def list_legal_terms(self) -> list[dict[str, Any]]:
         rows = self.session.scalars(select(LegalTerm).order_by(LegalTerm.term)).all()
         return [self._legal_term_to_dict(row) for row in rows]
+
+    def upsert_case_legal_terms(self, case_id: str, terms: list[dict[str, Any]]) -> None:
+        existing = self.session.scalars(select(CaseLegalTerm).where(CaseLegalTerm.case_id == case_id)).all()
+        for row in existing:
+            self.session.delete(row)
+        self.session.flush()
+        for item in terms:
+            term_row = self.get_legal_term_row(item["term"])
+            if term_row is None:
+                continue
+            paragraph_id = item.get("paragraph_id")
+            storage_paragraph_id = self._storage_id(case_id, paragraph_id) if paragraph_id else None
+            self.session.add(
+                CaseLegalTerm(
+                    id=f"{case_id}:term:{term_row.id}:{paragraph_id or 'case'}",
+                    case_id=case_id,
+                    term_id=term_row.id,
+                    context_meaning=item.get("context_meaning", ""),
+                    paragraph_id=storage_paragraph_id,
+                )
+            )
+        self.session.commit()
+
+    def get_case_legal_terms(self, case_id: str) -> list[dict[str, Any]]:
+        rows = self.session.scalars(select(CaseLegalTerm).where(CaseLegalTerm.case_id == case_id)).all()
+        results = []
+        for row in rows:
+            term_row = self.session.get(LegalTerm, row.term_id)
+            if term_row is None:
+                continue
+            item = self._legal_term_to_dict(term_row)
+            item["context_meaning"] = row.context_meaning
+            item["paragraph_id"] = self._public_id(row.paragraph_id) if row.paragraph_id else None
+            results.append(item)
+        return results
 
     def _legal_term_to_dict(self, row: LegalTerm) -> dict[str, Any]:
         return {

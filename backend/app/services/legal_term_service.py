@@ -39,19 +39,38 @@ class LegalTermService:
         return {"term": term, "source": "MVP built-in glossary", **item}
 
     def extract_terms(self, case_id: str) -> list[dict[str, Any]]:
+        stored_terms = self._stored_case_terms(case_id)
+        if stored_terms:
+            return stored_terms
         case = self.provider.get_case(case_id)
         if case is None:
             return []
-        text = " ".join([case.get("original_text", ""), case.get("summary", ""), " ".join(case.get("main_issues", []))])
         results = []
         terms = self._available_terms()
+        paragraphs = self._paragraphs(case)
         for term in terms:
-            if term in text:
+            for paragraph in paragraphs:
+                if term not in paragraph["original_text"]:
+                    continue
                 item = self.get_term(term)
-                if item:
-                    item = dict(item)
-                    item["context_meaning"] = f"현재 판결문에서 '{term}' 표현이 사용되었습니다."
-                    results.append(item)
+                if item is None:
+                    continue
+                item = dict(item)
+                item["context_meaning"] = f"현재 문단에서 '{term}' 표현이 사용되었습니다."
+                item["paragraph_id"] = paragraph["paragraph_id"]
+                results.append(item)
+                break
+        if not results:
+            text = " ".join([case.get("original_text", ""), case.get("summary", ""), " ".join(case.get("main_issues", []))])
+            for term in terms:
+                if term in text:
+                    item = self.get_term(term)
+                    if item:
+                        item = dict(item)
+                        item["context_meaning"] = f"현재 판결문에서 '{term}' 표현이 사용되었습니다."
+                        item["paragraph_id"] = None
+                        results.append(item)
+        self._persist_case_terms(case_id, results)
         return results
 
     def _available_terms(self) -> list[str]:
@@ -61,3 +80,22 @@ class LegalTermService:
             if provider_terms:
                 return [item["term"] for item in provider_terms]
         return list(self.GLOSSARY)
+
+    def _stored_case_terms(self, case_id: str) -> list[dict[str, Any]]:
+        getter = getattr(self.provider, "get_case_legal_terms", None)
+        if getter is None:
+            return []
+        return getter(case_id)
+
+    def _persist_case_terms(self, case_id: str, terms: list[dict[str, Any]]) -> None:
+        writer = getattr(self.provider, "upsert_case_legal_terms", None)
+        if writer is not None:
+            writer(case_id, terms)
+
+    def _paragraphs(self, case: dict[str, Any]) -> list[dict[str, Any]]:
+        paragraphs = []
+        for section in case.get("sections", []):
+            paragraphs.extend(section.get("paragraphs", []))
+        if paragraphs:
+            return paragraphs
+        return [{"paragraph_id": None, "original_text": case.get("original_text", "")}]

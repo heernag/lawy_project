@@ -104,7 +104,7 @@ Returns a legal term definition loaded from the SQLite-backed MVP glossary.
 
 ### `GET /api/cases/{case_id}/legal-terms`
 
-Extracts built-in legal terms from a stored sample case.
+Extracts legal terms from a stored sample case. Results include paragraph IDs when a term is found in a specific paragraph, and extracted case-term links are persisted in SQLite for reuse.
 
 ### `GET /api/cases/{case_id}/similar`
 

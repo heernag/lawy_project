@@ -112,6 +112,20 @@ class DbCaseProvider(CaseProvider):
         finally:
             self._close_session(session)
 
+    def get_case_legal_terms(self, case_id: str) -> list[dict[str, Any]]:
+        repository, session = self._repository()
+        try:
+            return repository.get_case_legal_terms(case_id)
+        finally:
+            self._close_session(session)
+
+    def upsert_case_legal_terms(self, case_id: str, terms: list[dict[str, Any]]) -> None:
+        repository, session = self._repository()
+        try:
+            repository.upsert_case_legal_terms(case_id, terms)
+        finally:
+            self._close_session(session)
+
     def _apply_filters(self, cases: list[dict[str, Any]], filters: dict[str, Any]) -> list[dict[str, Any]]:
         result = cases
         for key, value in filters.items():

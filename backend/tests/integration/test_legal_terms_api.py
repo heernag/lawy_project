@@ -20,6 +20,18 @@ def test_case_legal_terms_api_returns_terms():
 
     assert response.status_code == 200
     assert response.json()["data"]["terms"]
+    assert "paragraph_id" in response.json()["data"]["terms"][0]
+
+
+def test_case_legal_terms_api_reuses_persisted_links():
+    client = TestClient(create_app())
+
+    first = client.get("/api/cases/sample-001/legal-terms")
+    second = client.get("/api/cases/sample-001/legal-terms")
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert second.json()["data"]["terms"] == first.json()["data"]["terms"]
 
 
 def test_summary_api_returns_summary():

@@ -6,6 +6,8 @@ On application startup, the sample case JSON is loaded into SQLite through the r
 
 The MVP glossary is stored in `data/legal_terms.json` and loaded into the `legal_terms` table on startup. It is a built-in educational glossary, not an official legal dictionary.
 
+When a case's legal terms are extracted, the case-term relationship and paragraph context are stored in `case_legal_terms`. This does not add new legal facts; it only records where built-in glossary terms appear in stored case text.
+
 The sample data is for development and testing. It does not claim to be an official court judgment, and sample case numbers are intentionally marked as sample IDs.
 
 The backend does not crawl websites.

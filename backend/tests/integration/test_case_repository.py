@@ -78,3 +78,52 @@ def test_case_repository_upserts_and_reads_summary():
     assert summary is not None
     assert summary["one_line_summary"] == "저장된 한 줄 요약"
     assert summary["court_reasoning"] == "저장된 판단"
+
+
+def test_case_repository_upserts_and_reads_case_legal_terms():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(bind=engine)
+    session = sessionmaker(bind=engine)()
+    repository = CaseRepository(session)
+    repository.upsert_case(
+        {
+            "case_id": "sample-term-link",
+            "case_number": "샘플-용어-001",
+            "case_name": "용어 연결 사건",
+            "court_name": "샘플 법원",
+            "decision_date": "2025-01-01",
+            "category": "민사",
+            "judgment_result": "기각",
+            "order_text": "원고의 청구를 기각한다.",
+            "original_text": "주문\n원고의 손해배상 청구를 기각한다.",
+            "summary": "손해배상 청구 기각 사건",
+            "main_issues": ["손해배상"],
+            "source_name": "MVP sample data",
+            "source_url": "",
+        }
+    )
+    repository.upsert_legal_term(
+        {
+            "term": "손해배상",
+            "easy_definition": "손해를 금전 등으로 메우는 것입니다.",
+            "example": "손해배상을 청구한다.",
+            "caution": "손해와 책임이 인정되어야 합니다.",
+            "source": "MVP built-in glossary",
+        }
+    )
+    repository.upsert_case_legal_terms(
+        "sample-term-link",
+        [
+            {
+                "term": "손해배상",
+                "context_meaning": "현재 문단에서 손해배상 청구를 뜻합니다.",
+                "paragraph_id": "paragraph-1-1",
+            }
+        ],
+    )
+
+    terms = repository.get_case_legal_terms("sample-term-link")
+
+    assert terms[0]["term"] == "손해배상"
+    assert terms[0]["paragraph_id"] == "paragraph-1-1"
+    assert terms[0]["easy_definition"] == "손해를 금전 등으로 메우는 것입니다."
