@@ -3,6 +3,7 @@
 Free-only FastAPI MVP for Korean case-law search and easy explanations.
 
 This backend does not use paid LLM APIs, paid embedding APIs, paid vector databases, or paid case-data APIs.
+Search uses local keyword matching and a free local hash-embedding fallback.
 
 ## Run
 
@@ -18,6 +19,24 @@ Swagger:
 
 ```text
 http://localhost:8000/docs
+```
+
+OpenAPI JSON:
+
+```text
+http://localhost:8000/openapi.json
+```
+
+Bruno collection:
+
+```text
+backend/bruno
+```
+
+Korean frontend flow guide:
+
+```text
+backend/docs/frontend-flow-ko.md
 ```
 
 ## Test
@@ -36,7 +55,7 @@ APP_ENV=development
 DATABASE_URL=sqlite:///./easy_case_law.db
 CORS_ORIGINS=http://localhost:5173
 LOG_LEVEL=INFO
-SIMILARITY_MODE=local_tfidf
+SIMILARITY_MODE=local_hash
 CASE_PROVIDER=sample
 ```
 
@@ -46,6 +65,7 @@ Included:
 
 - case sentence analysis
 - local sample case search
+- local hash-embedding similarity fallback
 - exact sample case-number search
 - detail lookup
 - section and paragraph splitting

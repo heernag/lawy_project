@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./easy_case_law.db"
     cors_origins: str = "http://localhost:5173"
     log_level: str = "INFO"
-    similarity_mode: str = "local_tfidf"
+    similarity_mode: str = "local_hash"
     case_provider: str = "sample"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
