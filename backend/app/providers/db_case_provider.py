@@ -98,6 +98,20 @@ class DbCaseProvider(CaseProvider):
         finally:
             self._close_session(session)
 
+    def get_legal_term(self, term: str) -> dict[str, Any] | None:
+        repository, session = self._repository()
+        try:
+            return repository.get_legal_term(term)
+        finally:
+            self._close_session(session)
+
+    def list_legal_terms(self) -> list[dict[str, Any]]:
+        repository, session = self._repository()
+        try:
+            return repository.list_legal_terms()
+        finally:
+            self._close_session(session)
+
     def _apply_filters(self, cases: list[dict[str, Any]], filters: dict[str, Any]) -> list[dict[str, Any]]:
         result = cases
         for key, value in filters.items():

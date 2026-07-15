@@ -9,6 +9,45 @@ def test_get_known_legal_term_has_easy_definition():
     assert result["source"] == "MVP built-in glossary"
 
 
+class LegalTermMemoryProvider:
+    def get_case(self, case_id):
+        return {
+            "case_id": case_id,
+            "original_text": "원고의 손해배상 청구를 기각한다.",
+            "summary": "손해배상 청구 기각 사건",
+            "main_issues": ["손해배상"],
+        }
+
+    def get_legal_term(self, term):
+        if term == "기각":
+            return {
+                "term": "기각",
+                "easy_definition": "저장된 기각 정의",
+                "example": "원고의 청구를 기각한다.",
+                "caution": "기각과 각하는 다릅니다.",
+                "source": "DB glossary",
+            }
+        return None
+
+    def list_legal_terms(self):
+        return [
+            {
+                "term": "기각",
+                "easy_definition": "저장된 기각 정의",
+                "example": "원고의 청구를 기각한다.",
+                "caution": "기각과 각하는 다릅니다.",
+                "source": "DB glossary",
+            }
+        ]
+
+
+def test_get_term_prefers_provider_glossary():
+    result = LegalTermService(provider=LegalTermMemoryProvider()).get_term("기각")
+
+    assert result["easy_definition"] == "저장된 기각 정의"
+    assert result["source"] == "DB glossary"
+
+
 def test_extract_terms_from_case_text():
     results = LegalTermService().extract_terms("sample-001")
 

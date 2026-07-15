@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.case import CaseDocument, CaseParagraph, CaseSection, CaseSummary
+from app.models.case import CaseDocument, CaseParagraph, CaseSection, CaseSummary, LegalTerm
 
 
 class CaseRepository:
@@ -143,6 +143,40 @@ class CaseRepository:
             "defendant_claim": row.defendant_claim,
             "court_reasoning": row.court_reasoning,
             "judgment_result": row.judgment_result,
+        }
+
+    def upsert_legal_term(self, term: dict[str, Any]) -> LegalTerm:
+        term_name = term["term"]
+        row = self.get_legal_term_row(term_name) or LegalTerm(id=term_name, term=term_name)
+        row.easy_definition = term.get("easy_definition", "")
+        row.example = term.get("example", "")
+        row.caution = term.get("caution", "")
+        row.source = term.get("source", "MVP built-in glossary")
+        self.session.add(row)
+        self.session.commit()
+        self.session.refresh(row)
+        return row
+
+    def get_legal_term_row(self, term: str) -> LegalTerm | None:
+        return self.session.scalar(select(LegalTerm).where(LegalTerm.term == term))
+
+    def get_legal_term(self, term: str) -> dict[str, Any] | None:
+        row = self.get_legal_term_row(term)
+        if row is None:
+            return None
+        return self._legal_term_to_dict(row)
+
+    def list_legal_terms(self) -> list[dict[str, Any]]:
+        rows = self.session.scalars(select(LegalTerm).order_by(LegalTerm.term)).all()
+        return [self._legal_term_to_dict(row) for row in rows]
+
+    def _legal_term_to_dict(self, row: LegalTerm) -> dict[str, Any]:
+        return {
+            "term": row.term,
+            "easy_definition": row.easy_definition,
+            "example": row.example,
+            "caution": row.caution,
+            "source": row.source,
         }
 
     def _storage_id(self, case_id: str, public_id: str) -> str:

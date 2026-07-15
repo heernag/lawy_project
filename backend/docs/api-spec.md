@@ -100,7 +100,7 @@ Regenerates one paragraph and stores its simplified text, validation status, and
 
 ### `GET /api/legal-terms/{term}`
 
-Returns a built-in legal term definition.
+Returns a legal term definition loaded from the SQLite-backed MVP glossary.
 
 ### `GET /api/cases/{case_id}/legal-terms`
 

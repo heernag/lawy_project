@@ -2,7 +2,9 @@
 
 This MVP uses only `MVP sample data` from `data/sample_cases.json`.
 
-On application startup, the sample JSON is loaded into SQLite through the repository layer. API services then read cases through the configured case provider rather than inventing or fetching external cases.
+On application startup, the sample case JSON is loaded into SQLite through the repository layer. API services then read cases through the configured case provider rather than inventing or fetching external cases.
+
+The MVP glossary is stored in `data/legal_terms.json` and loaded into the `legal_terms` table on startup. It is a built-in educational glossary, not an official legal dictionary.
 
 The sample data is for development and testing. It does not claim to be an official court judgment, and sample case numbers are intentionally marked as sample IDs.
 

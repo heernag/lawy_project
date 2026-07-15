@@ -28,6 +28,11 @@ class LegalTermService:
         self.provider = provider or SampleCaseProvider(Path("data/sample_cases.json"))
 
     def get_term(self, term: str) -> dict[str, Any] | None:
+        provider_getter = getattr(self.provider, "get_legal_term", None)
+        if provider_getter is not None:
+            provider_term = provider_getter(term)
+            if provider_term is not None:
+                return provider_term
         item = self.GLOSSARY.get(term)
         if item is None:
             return None
@@ -39,10 +44,20 @@ class LegalTermService:
             return []
         text = " ".join([case.get("original_text", ""), case.get("summary", ""), " ".join(case.get("main_issues", []))])
         results = []
-        for term in self.GLOSSARY:
+        terms = self._available_terms()
+        for term in terms:
             if term in text:
                 item = self.get_term(term)
                 if item:
+                    item = dict(item)
                     item["context_meaning"] = f"현재 판결문에서 '{term}' 표현이 사용되었습니다."
                     results.append(item)
         return results
+
+    def _available_terms(self) -> list[str]:
+        provider_lister = getattr(self.provider, "list_legal_terms", None)
+        if provider_lister is not None:
+            provider_terms = provider_lister()
+            if provider_terms:
+                return [item["term"] for item in provider_terms]
+        return list(self.GLOSSARY)

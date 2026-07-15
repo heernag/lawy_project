@@ -10,6 +10,7 @@ def test_legal_term_api_returns_definition():
 
     assert response.status_code == 200
     assert response.json()["data"]["term"] == "기각"
+    assert response.json()["data"]["source"] == "MVP built-in glossary"
 
 
 def test_case_legal_terms_api_returns_terms():

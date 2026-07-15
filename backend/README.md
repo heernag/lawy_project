@@ -12,7 +12,7 @@ python -m pip install -r requirements.txt
 python -m uvicorn app.main:app --reload
 ```
 
-On startup, the app creates the SQLite tables and loads `data/sample_cases.json` into the local database.
+On startup, the app creates the SQLite tables and loads `data/sample_cases.json` and `data/legal_terms.json` into the local database.
 
 Swagger:
 
@@ -52,6 +52,7 @@ Included:
 - rule-based paragraph simplification
 - protected-value validation
 - built-in legal term glossary
+- SQLite-backed glossary lookup
 - CORS
 - Swagger and OpenAPI
 

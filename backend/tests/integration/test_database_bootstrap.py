@@ -25,6 +25,7 @@ def test_bootstrap_database_creates_tables_and_loads_sample_cases(tmp_path):
     sections = repository.get_case_sections("sample-001")
     assert sections[0]["section_type"] == "주문"
     assert sections[0]["paragraphs"][0]["paragraph_id"] == "paragraph-1-1"
+    assert repository.get_legal_term("기각")["source"] == "MVP built-in glossary"
 
 
 def test_db_case_provider_reads_cases_from_repository():
@@ -100,6 +101,26 @@ def test_db_case_provider_returns_persisted_sections_from_repository():
     case = DbCaseProvider(repository).get_case("sample-section")
 
     assert case["sections"][0]["paragraphs"][0]["original_text"] == "피고는 원고에게 지급하라."
+
+
+def test_db_case_provider_reads_legal_terms_from_repository():
+    engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+    Base.metadata.create_all(bind=engine)
+    session = sessionmaker(bind=engine)()
+    repository = CaseRepository(session)
+    repository.upsert_legal_term(
+        {
+            "term": "기각",
+            "easy_definition": "법원이 청구를 받아들이지 않는다는 뜻입니다.",
+            "example": "원고의 청구를 기각한다.",
+            "caution": "기각과 각하는 의미가 다릅니다.",
+            "source": "MVP built-in glossary",
+        }
+    )
+
+    provider = DbCaseProvider(repository)
+
+    assert provider.get_legal_term("기각")["easy_definition"].startswith("법원이")
 
 
 def test_app_exposes_database_backed_provider():
