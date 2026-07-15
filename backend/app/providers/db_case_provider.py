@@ -84,6 +84,20 @@ class DbCaseProvider(CaseProvider):
         finally:
             self._close_session(session)
 
+    def get_summary(self, case_id: str) -> dict[str, Any] | None:
+        repository, session = self._repository()
+        try:
+            return repository.get_summary(case_id)
+        finally:
+            self._close_session(session)
+
+    def upsert_summary(self, case_id: str, summary: dict[str, Any]) -> None:
+        repository, session = self._repository()
+        try:
+            repository.upsert_summary(case_id, summary)
+        finally:
+            self._close_session(session)
+
     def _apply_filters(self, cases: list[dict[str, Any]], filters: dict[str, Any]) -> list[dict[str, Any]]:
         result = cases
         for key, value in filters.items():

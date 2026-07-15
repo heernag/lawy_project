@@ -6,6 +6,8 @@ Case analysis, summaries, and simplification are rule-based and local. The simpl
 
 Generated paragraph simplifications are persisted in SQLite with their validation status and warnings. A stored simplification can be reused by `GET /api/cases/{case_id}/simplified`.
 
+Case summaries are also persisted in SQLite. `POST /api/cases/{case_id}/summary` reuses a stored summary unless `force_regenerate` is set to `true`.
+
 Validation checks:
 
 - amounts

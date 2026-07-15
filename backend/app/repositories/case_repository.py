@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.case import CaseDocument, CaseParagraph, CaseSection
+from app.models.case import CaseDocument, CaseParagraph, CaseSection, CaseSummary
 
 
 class CaseRepository:
@@ -115,6 +115,35 @@ class CaseRepository:
         self.session.commit()
         self.session.refresh(paragraph)
         return paragraph
+
+    def upsert_summary(self, case_id: str, summary: dict[str, Any]) -> CaseSummary | None:
+        if self.get_case(case_id) is None:
+            return None
+        summary_id = f"{case_id}:summary"
+        row = self.session.get(CaseSummary, summary_id) or CaseSummary(id=summary_id, case_id=case_id)
+        row.one_line_summary = summary.get("one_line_summary", "")
+        row.background = summary.get("background", "")
+        row.plaintiff_claim = summary.get("plaintiff_claim", "")
+        row.defendant_claim = summary.get("defendant_claim", "")
+        row.court_reasoning = summary.get("court_reasoning", "")
+        row.judgment_result = summary.get("judgment_result", "")
+        self.session.add(row)
+        self.session.commit()
+        self.session.refresh(row)
+        return row
+
+    def get_summary(self, case_id: str) -> dict[str, Any] | None:
+        row = self.session.get(CaseSummary, f"{case_id}:summary")
+        if row is None:
+            return None
+        return {
+            "one_line_summary": row.one_line_summary,
+            "background": row.background,
+            "plaintiff_claim": row.plaintiff_claim,
+            "defendant_claim": row.defendant_claim,
+            "court_reasoning": row.court_reasoning,
+            "judgment_result": row.judgment_result,
+        }
 
     def _storage_id(self, case_id: str, public_id: str) -> str:
         if public_id.startswith(f"{case_id}:"):

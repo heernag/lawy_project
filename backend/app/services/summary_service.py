@@ -13,6 +13,14 @@ class SummaryService:
         case = self.provider.get_case(case_id)
         if case is None:
             return None
+        stored_summary = self._stored_summary(case_id)
+        if stored_summary is not None and not force_regenerate:
+            return self._with_dynamic_fields(case, stored_summary)
+        generated = self._generate_summary(case_id, case)
+        self._persist_summary(case_id, generated)
+        return generated
+
+    def _generate_summary(self, case_id: str, case: dict[str, Any]) -> dict[str, Any]:
         original_text = case.get("original_text", "")
         return {
             "one_line_summary": case.get("summary", ""),
@@ -24,6 +32,23 @@ class SummaryService:
             "judgment_result": case.get("judgment_result", ""),
             "legal_terms": [item["term"] for item in LegalTermService(self.provider).extract_terms(case_id)],
         }
+
+    def _stored_summary(self, case_id: str) -> dict[str, Any] | None:
+        getter = getattr(self.provider, "get_summary", None)
+        if getter is None:
+            return None
+        return getter(case_id)
+
+    def _persist_summary(self, case_id: str, summary: dict[str, Any]) -> None:
+        writer = getattr(self.provider, "upsert_summary", None)
+        if writer is not None:
+            writer(case_id, summary)
+
+    def _with_dynamic_fields(self, case: dict[str, Any], summary: dict[str, Any]) -> dict[str, Any]:
+        result = dict(summary)
+        result["main_issues"] = case.get("main_issues", [])
+        result["legal_terms"] = [item["term"] for item in LegalTermService(self.provider).extract_terms(case["case_id"])]
+        return result
 
     def _line_after(self, text: str, heading: str) -> str:
         lines = [line.strip() for line in text.splitlines() if line.strip()]

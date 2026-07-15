@@ -28,3 +28,14 @@ def test_summary_api_returns_summary():
 
     assert response.status_code == 200
     assert response.json()["data"]["one_line_summary"]
+
+
+def test_summary_api_reuses_stored_summary_after_generation():
+    client = TestClient(create_app())
+
+    first = client.post("/api/cases/sample-001/summary", json={"force_regenerate": True})
+    second = client.post("/api/cases/sample-001/summary", json={"force_regenerate": False})
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert second.json()["data"]["one_line_summary"] == first.json()["data"]["one_line_summary"]

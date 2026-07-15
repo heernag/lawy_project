@@ -77,6 +77,8 @@ Request:
 }
 ```
 
+When `force_regenerate` is `false`, a stored summary is reused if one exists. When it is `true`, the rule-based summary is regenerated and stored in SQLite.
+
 ### `POST /api/cases/{case_id}/simplify`
 
 Request:
