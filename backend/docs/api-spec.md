@@ -26,6 +26,9 @@ Errors use:
 }
 ```
 
+Request body validation errors also use this common format with HTTP 400 and
+`INVALID_REQUEST`; the frontend does not need a separate FastAPI 422 parser.
+
 ## Endpoints
 
 ### `GET /api/health`
@@ -68,6 +71,7 @@ Request:
 ```
 
 Search uses exact case-number matching, metadata filters, keyword overlap, and locally stored search-index text from SQLite. It does not call paid embedding APIs.
+`page` must be 1 or greater. `size` must be between 1 and 50.
 
 ### `GET /api/cases/{case_id}`
 

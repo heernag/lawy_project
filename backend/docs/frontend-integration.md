@@ -108,6 +108,8 @@ unless the user explicitly submits it for the next backend action.
 The backend rejects analysis queries shorter than 5 characters or longer than
 2000 characters. Display `input_warnings` as caution text, not as a legal
 conclusion.
+For search, send `page >= 1` and `1 <= size <= 50`. Invalid request bodies are
+returned as HTTP 400 with `error.code === "INVALID_REQUEST"`.
 
 ## User Notice
 
