@@ -25,6 +25,8 @@ Overall direction is sound for the requested MVP:
   diagnostics.
 - Frontend integration docs now include concrete validation error examples,
   including production-like responses where validation details are hidden.
+- Address masking now has an explicit false-positive test for road-name text
+  followed by an amount expression.
 
 Main residual risks:
 
@@ -35,7 +37,8 @@ Main residual risks:
 - Validation details include Pydantic metadata only in development-like
   environments. Production-like environments return `details: null`.
 - Address detection is intentionally conservative and currently covers clear
-  Korean road-address patterns only.
+  Korean road-address patterns only. It avoids masking road-name text followed
+  by amount expressions such as `123만 원`.
 - Existing sample text and some console output can appear garbled on Windows
   terminals if the shell encoding is not UTF-8, even when tests pass.
 
@@ -382,6 +385,37 @@ Review notes:
 - Risk: Exact `details` contents should still be treated as diagnostic metadata,
   not as a UI contract.
 
+### 13. Address Masking False-Positive Guard
+
+Related commits:
+
+- This chapter will be tracked by the next feature commit.
+
+What changed:
+
+- Added a unit test proving that `서울시 강남구 테헤란로 123만 원` is not masked
+  as an address.
+- Updated the road-address privacy pattern so a road-name number followed by a
+  Korean amount expression such as `만 원` or `억 원` is not treated as an
+  address number.
+- Kept the existing clear road-address masking behavior intact.
+
+Why it matters:
+
+- Legal dispute descriptions often contain place names and money amounts in the
+  same sentence.
+- Over-masking can make the frontend preview confusing and can hide facts that
+  are not actually personal address data.
+
+Review notes:
+
+- Good: The change was driven by a failing regression test before production
+  code was changed.
+- Good: The rule remains local and free; no external privacy or paid service is
+  used.
+- Risk: Address detection is still heuristic. New address formats should be
+  added with both positive and false-positive fixtures.
+
 ## Cross-Cutting Review
 
 ### Architecture
@@ -470,11 +504,11 @@ Review recommendations:
 
 Recommended order:
 
-1. Add address false-positive tests before expanding address detection.
-2. Add a free local embedding adapter only if it can run without paid APIs.
-3. Add section-splitting fixtures for appeal/court-procedure headings.
-4. Add a structured startup diagnostics service if health checks grow further.
-5. Add a small frontend-facing error-code reference table.
+1. Add a free local embedding adapter only if it can run without paid APIs.
+2. Add section-splitting fixtures for appeal/court-procedure headings.
+3. Add a structured startup diagnostics service if health checks grow further.
+4. Add a small frontend-facing error-code reference table.
+5. Add more address positive/false-positive fixtures before widening masking.
 
 ## Verification Snapshot
 
@@ -482,7 +516,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-75 passed, 1 warning
+76 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

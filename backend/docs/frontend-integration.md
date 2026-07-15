@@ -117,7 +117,8 @@ after privacy detection. Keep the original user input only in local form state
 unless the user explicitly submits it for the next backend action.
 Privacy detection is local and currently covers phone numbers, resident-
 registration-number patterns, email addresses, and clear Korean road-address
-patterns.
+patterns. Road-name text followed by a Korean amount expression such as
+`123만 원` is not treated as an address.
 The backend rejects analysis queries shorter than 5 characters or longer than
 2000 characters. Display `input_warnings` as caution text, not as a legal
 conclusion.
