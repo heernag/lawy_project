@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.dependencies import get_case_provider
 from app.core.errors import CASE_NOT_FOUND, INVALID_REQUEST
-from app.core.responses import api_error, api_success
+from app.core.responses import ApiResponse, api_error, api_success
 from app.providers.base_case_provider import CaseProvider
 from app.schemas.case_analysis import CaseAnalysisRequest
 from app.schemas.search import CaseSearchRequest
@@ -40,7 +40,7 @@ def search_cases(request: CaseSearchRequest, provider: CaseProvider = Depends(ge
     return api_success(CaseSearchService(provider=provider).search(request).model_dump())
 
 
-@router.get("/cases/{case_id}")
+@router.get("/cases/{case_id}", response_model=ApiResponse, responses={404: {"model": ApiResponse}})
 def get_case(case_id: str, provider: CaseProvider = Depends(get_case_provider)):
     result = CaseDetailService(provider=provider).get_case_detail(case_id)
     if result is None:

@@ -21,7 +21,7 @@
 
 ```text
 python -m pytest -q
-90 passed, 1 warning
+93 passed, 1 warning
 ```
 
 README 기준 실행 검증:
@@ -42,8 +42,8 @@ Easy Case Law Backend
 | 완료 조건 | 상태 | 근거 |
 | --- | --- | --- |
 | FastAPI 서버 구조 | 완료 | `app/main.py`, README 실행 방법 |
-| Swagger 확인 | 완료 | FastAPI `/docs` |
-| OpenAPI JSON 확인 | 완료 | FastAPI `/openapi.json` |
+| Swagger 확인 | 완료 | FastAPI `/docs`, OpenAPI 계약 테스트 |
+| OpenAPI JSON 확인 | 완료 | FastAPI `/openapi.json`, 핵심 경로/공통 응답 스키마 테스트 |
 | 사건 문장 분석 | 완료 | `POST /api/cases/analyze`, 테스트 존재 |
 | 개인정보 탐지/마스킹 | 완료 | 전화번호, 주민등록번호 형식, 이메일, 도로명 주소, 주소 오탐 방지 fixture |
 | 실제 저장 판결문만 검색 | 완료 | 샘플/DB provider 기반 |
@@ -77,6 +77,7 @@ Easy Case Law Backend
 - `docs: refresh korean progress notes`
 - `test: add judgment section heading fixtures`
 - `docs: lock frontend TypeScript contract examples`
+- `test: add OpenAPI contract checks`
 
 커밋 전 전체 테스트도 다시 통과했습니다.
 

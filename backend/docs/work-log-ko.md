@@ -280,10 +280,42 @@ python -m pytest tests\unit\test_frontend_integration_docs.py -q
 1 passed
 ```
 
+### 13. OpenAPI 계약 테스트 추가
+
+수정한 파일:
+
+- `backend/app/core/responses.py`
+- `backend/app/api/routes/cases.py`
+- `backend/tests/integration/test_openapi_contract.py`
+- `backend/docs/progress-summary-ko.md`
+- `backend/docs/work-log-ko.md`
+- `backend/docs/mvp-final-check-ko.md`
+
+작업 내용:
+
+- `/openapi.json`에 프론트가 쓰는 핵심 API 경로가 계속 노출되는지 확인하는 통합 테스트를 추가했다.
+- OpenAPI `components.schemas`에 `ApiResponse`, `ApiError` 공통 응답 스키마가 존재하는지 확인하는 테스트를 추가했다.
+- 판결문 상세 조회 `GET /api/cases/{case_id}`가 200/404 응답 모두 공통 `ApiResponse` 스키마를 문서화하는지 확인했다.
+- 테스트를 먼저 추가했을 때 `ApiError` 스키마와 상세 조회 응답 `$ref`가 없어 실패하는 것을 확인했다.
+- `ApiResponse`, `ApiError` Pydantic 모델을 추가하고 상세 조회 라우트에 OpenAPI 응답 모델을 연결했다.
+
+검증:
+
+```text
+python -m pytest tests\integration\test_openapi_contract.py -q
+2 failed, 1 passed, 1 warning
+```
+
+```text
+python -m pytest tests\integration\test_openapi_contract.py -q
+3 passed, 1 warning
+```
+
 ## 이번 챕터 변경 파일
 
-- `backend/docs/frontend-integration.md`
-- `backend/tests/unit/test_frontend_integration_docs.py`
+- `backend/app/core/responses.py`
+- `backend/app/api/routes/cases.py`
+- `backend/tests/integration/test_openapi_contract.py`
 - `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
 - `backend/docs/mvp-final-check-ko.md`
@@ -291,4 +323,4 @@ python -m pytest tests\unit\test_frontend_integration_docs.py -q
 ## 다음에 이어서 할 작업
 
 1. 필요 시 완전히 새 환경에서 의존성 설치부터 재검증한다.
-2. OpenAPI JSON을 직접 검사하는 계약 테스트를 추가한다.
+2. README 기준 실행 명령을 깨끗한 확인 절차로 다시 점검한다.

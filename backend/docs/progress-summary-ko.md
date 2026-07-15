@@ -32,6 +32,7 @@
 - FastAPI 서버 구조 생성
 - API 라우트 분리
 - 공통 성공/실패 응답 형식 적용
+- OpenAPI에 공통 응답/에러 스키마 노출
 - CORS 설정
 - `.env.example` 작성
 - README 작성
@@ -128,6 +129,7 @@
 - 프론트용 TypeScript 타입 예시 작성
 - 검색 응답, 상세 응답, 쉬운 설명 응답 TypeScript 계약 예시 보강
 - 프론트 연동 문서의 핵심 응답 타입 누락을 막는 테스트 추가
+- OpenAPI 핵심 경로 및 공통 응답 스키마 계약 테스트 추가
 - 검증 실패 응답 예시 작성
 - 전체 API 체크리스트 작성
 - Bruno 테스트 컬렉션 작성
@@ -149,7 +151,7 @@
 
 ```text
 python -m pytest -q
-90 passed, 1 warning
+93 passed, 1 warning
 ```
 
 경고 1개는 기존 FastAPI/Starlette TestClient 관련 경고입니다.
@@ -167,6 +169,7 @@ python -m pytest -q
 - `docs: refresh korean progress notes`
 - `test: add judgment section heading fixtures`
 - `docs: lock frontend TypeScript contract examples`
+- `test: add OpenAPI contract checks`
 
 최신 커밋 해시는 `git log --oneline -n 1` 기준으로 확인합니다.
 
