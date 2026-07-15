@@ -80,6 +80,8 @@ What changed:
 - Persisted sections and paragraph simplification state.
 - Later expanded the splitter to recognize simple numbered headings such as
   `1. 주문`, `2. 청구취지`, and `가. 이유`.
+- Later added aliases for party-argument headings such as `원고의 주장` and
+  `피고의 주장`.
 
 Why it matters:
 
@@ -94,6 +96,8 @@ Review notes:
 - Good: Stored simplification state avoids unnecessary recomputation.
 - Good: Numbered heading fixtures reduce the chance of only supporting one
   sample text format.
+- Good: Party-argument fixture coverage helps keep claims and court reasoning
+  separated for downstream simplification.
 - Risk: Section splitting is still heuristic. More real judgment formats will
   need fixture-based tests.
 
@@ -413,7 +417,7 @@ Recommended order:
 2. Add a free local embedding adapter only if it can run without paid APIs.
 3. Add a lightweight startup/data-bootstrap health diagnostic.
 4. Add response examples for validation errors in the frontend guide.
-5. Add more section-splitting fixtures for party-argument headings.
+5. Add section-splitting fixtures for conclusion and related-law headings.
 
 ## Verification Snapshot
 
@@ -421,7 +425,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-70 passed, 1 warning
+71 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

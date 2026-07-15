@@ -39,3 +39,23 @@ def test_split_sections_accepts_numbered_common_headings():
     assert sections[0].paragraphs[0].original_text == "피고는 원고에게 100만 원을 지급하라."
     assert sections[1].paragraphs[0].original_text == "원고는 손해배상을 구한다."
     assert sections[2].paragraphs[0].original_text == "다음과 같은 이유로 판단한다."
+
+
+def test_split_sections_normalizes_party_argument_headings():
+    text = "\n".join(
+        [
+            "1. 원고의 주장",
+            "원고는 계약 해제를 주장한다.",
+            "2. 피고의 주장",
+            "피고는 하자가 없었다고 다툰다.",
+            "3. 법원의 판단",
+            "법원은 피고의 책임을 인정한다.",
+        ]
+    )
+
+    sections = ParagraphService().split_sections(text)
+
+    assert [section.section_type for section in sections] == ["원고 주장", "피고 주장", "법원의 판단"]
+    assert sections[0].paragraphs[0].original_text == "원고는 계약 해제를 주장한다."
+    assert sections[1].paragraphs[0].original_text == "피고는 하자가 없었다고 다툰다."
+    assert sections[2].paragraphs[0].original_text == "법원은 피고의 책임을 인정한다."

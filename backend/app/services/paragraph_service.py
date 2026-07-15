@@ -33,13 +33,17 @@ class ParagraphService:
         "이유",
         "인정 사실",
         "원고 주장",
+        "원고의 주장",
         "피고 주장",
+        "피고의 주장",
         "법원의 판단",
         "결론",
         "관련 법령",
     ]
     HEADING_ALIASES = {
         "청구취지": "청구 취지",
+        "원고의 주장": "원고 주장",
+        "피고의 주장": "피고 주장",
     }
 
     def split_sections(self, original_text: str) -> list[SectionResult]:
