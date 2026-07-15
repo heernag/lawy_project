@@ -26,3 +26,67 @@ Official data providers may be added only after confirming:
 - source attribution requirements
 
 Until those conditions are confirmed, official APIs remain documentation-only extension points.
+
+## Official Source Candidates
+
+These candidates are not enabled in the MVP. They are review targets for a
+future provider implementation.
+
+### National Law Information Open Data
+
+URL:
+
+```text
+https://open.law.go.kr/LSO/openApi/guideList.do
+```
+
+Observed from the official open-data guide:
+
+- The guide lists judgment (`판례`) APIs for list lookup and body lookup.
+- The guide also lists constitutional decisions, legal interpretations,
+  administrative appeals, legal terms, and other legal information APIs.
+
+Required before implementation:
+
+- Apply for and manage the official API key if required.
+- Confirm request parameters for judgment list and body lookup.
+- Confirm call limits and acceptable usage.
+- Confirm whether storing returned judgment text in the service database is
+  allowed.
+- Confirm whether displaying original text to end users is allowed.
+- Confirm redistribution and commercial-use conditions.
+- Confirm required source attribution text.
+
+### Korean Court Judgment Access Pages
+
+URL:
+
+```text
+https://www.scourt.go.kr/portal/information/finalruling/peruse/peruse_status.jsp
+```
+
+Required before implementation:
+
+- Confirm whether there is an official API or only a user-facing reading page.
+- Do not automate crawling unless the site terms clearly allow it.
+- Do not bypass access restrictions, payment, authentication, CAPTCHA, or
+  rate-limiting controls.
+- Confirm whether any downloaded or viewed document can be stored, indexed,
+  redisplayed, or used commercially.
+
+## Provider Implementation Rule
+
+Any real-data provider must be added behind the existing case-provider
+interface. The MVP must keep working with `SampleCaseProvider` and the
+SQLite-backed local provider even if an official provider is unavailable.
+
+Allowed future shape:
+
+```text
+CaseProvider
+├─ SampleCaseProvider
+├─ DbCaseProvider
+└─ OfficialPublicCaseProvider
+```
+
+Do not mix external API calls directly into route handlers.

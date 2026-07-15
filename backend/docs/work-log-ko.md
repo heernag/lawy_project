@@ -151,9 +151,25 @@ python -m pytest -q
 85 passed, 1 warning
 ```
 
+### 8. 공식 판결문 데이터 출처 후보 점검표 보강
+
+수정한 문서:
+
+- `backend/docs/data-source-policy.md`
+
+작업 내용:
+
+- 국가법령정보 공동활용의 판례 목록/본문 조회 후보를 문서에 추가했다.
+- 대한민국 법원 판결서 열람 페이지는 자동 크롤링 대상이 아니라 약관 확인 대상임을
+  명시했다.
+- 저장, 재배포, 원문 표시, 상업적 이용, 출처 표시 조건을 확인하기 전에는 실제
+  provider를 구현하지 않는다고 적었다.
+- 미래 구현도 `CaseProvider` 인터페이스 뒤에 붙여야 한다고 정리했다.
+
 ## 현재 미커밋 작업
 
 - `backend/docs/api-checklist-ko.md`
+- `backend/docs/data-source-policy.md`
 - `backend/docs/mvp-final-check-ko.md`
 - `backend/docs/progress-summary-ko.md`
 - `backend/docs/work-log-ko.md`
