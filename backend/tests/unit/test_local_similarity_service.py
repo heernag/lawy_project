@@ -9,3 +9,17 @@ def test_similarity_scores_overlap_higher_than_unrelated_text():
 
     assert related > unrelated
     assert 0 <= related <= 1
+
+
+def test_similarity_uses_embedding_provider_when_tokens_do_not_overlap():
+    class FakeEmbeddingProvider:
+        def embed(self, text):
+            if text == "query":
+                return [1.0, 0.0]
+            return [1.0, 0.0]
+
+    service = LocalSimilarityService(embedding_provider=FakeEmbeddingProvider())
+
+    score = service.score("query", "document")
+
+    assert score > 0
