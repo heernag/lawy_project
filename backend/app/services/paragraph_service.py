@@ -28,6 +28,8 @@ class SectionResult:
 class ParagraphService:
     HEADINGS = [
         "주문",
+        "주 문",
+        "판결 주문",
         "청구 취지",
         "청구취지",
         "이유",
@@ -48,6 +50,8 @@ class ParagraphService:
         "적용법령",
     ]
     HEADING_ALIASES = {
+        "주 문": "주문",
+        "판결 주문": "주문",
         "청구취지": "청구 취지",
         "인정사실": "인정 사실",
         "인정된 사실": "인정 사실",

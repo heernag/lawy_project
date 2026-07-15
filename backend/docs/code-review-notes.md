@@ -86,6 +86,8 @@ What changed:
   `관련 법령`.
 - Later added aliases for recognized-fact headings such as `기초사실` and
   `인정된 사실`, normalized to `인정 사실`.
+- Later added aliases for judgment-order headings such as `판결 주문` and
+  `주 문`, normalized to `주문`.
 
 Why it matters:
 
@@ -106,6 +108,8 @@ Review notes:
   paragraphs.
 - Good: Recognized-fact fixture coverage helps distinguish facts accepted by
   the court from party arguments.
+- Good: Judgment-order fixture coverage protects the most outcome-sensitive
+  section from being treated as generic text.
 - Risk: Section splitting is still heuristic. More real judgment formats will
   need fixture-based tests.
 
@@ -425,7 +429,7 @@ Recommended order:
 2. Add a free local embedding adapter only if it can run without paid APIs.
 3. Add a lightweight startup/data-bootstrap health diagnostic.
 4. Add response examples for validation errors in the frontend guide.
-5. Add section-splitting fixtures for judgment-order heading variants.
+5. Add section-splitting fixtures for appeal/court-procedure headings.
 
 ## Verification Snapshot
 
@@ -433,7 +437,7 @@ Latest verification before this document was written:
 
 ```text
 python -m pytest -q
-73 passed, 1 warning
+74 passed, 1 warning
 ```
 
 The warning is the existing FastAPI/Starlette TestClient deprecation warning.

@@ -93,3 +93,20 @@ def test_split_sections_normalizes_recognized_fact_headings():
     assert [section.section_type for section in sections] == ["인정 사실", "인정 사실"]
     assert sections[0].paragraphs[0].original_text == "원고와 피고는 매매계약을 체결하였다."
     assert sections[1].paragraphs[0].original_text == "제품에는 하자가 있었다."
+
+
+def test_split_sections_normalizes_judgment_order_headings():
+    text = "\n".join(
+        [
+            "1. 판결 주문",
+            "피고는 원고에게 대금을 지급하라.",
+            "2. 주 문",
+            "소송비용은 피고가 부담한다.",
+        ]
+    )
+
+    sections = ParagraphService().split_sections(text)
+
+    assert [section.section_type for section in sections] == ["주문", "주문"]
+    assert sections[0].paragraphs[0].original_text == "피고는 원고에게 대금을 지급하라."
+    assert sections[1].paragraphs[0].original_text == "소송비용은 피고가 부담한다."

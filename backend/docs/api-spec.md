@@ -93,7 +93,7 @@ Returns sections and paragraphs with stable paragraph IDs. Sections and paragrap
 The section splitter recognizes common headings such as `주문`, `청구 취지`,
 `이유`, `인정 사실`, `원고 주장`, `피고 주장`, and `법원의 판단`,
 including simple numbered forms like `1. 주문` and aliases like `기초사실`,
-`원고의 주장`, or `적용법령`.
+`판결 주문`, `원고의 주장`, or `적용법령`.
 
 ### `POST /api/cases/{case_id}/summary`
 
