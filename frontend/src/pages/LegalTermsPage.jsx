@@ -1,8 +1,0 @@
-import "../styles/legal-terms.css";
-import { useMemo, useState } from "react";
-import { FiBookOpen, FiSearch } from "react-icons/fi";
-import Header from "../components/Header.jsx";
-import HamburgerMenu from "../components/HamburgerMenu.jsx";
-const terms=[{term:"기각",easy:"신청이나 주장을 받아들이지 않는 결정",detail:"법원이 신청 또는 청구의 내용을 심리한 뒤 이유가 없다고 판단하여 받아들이지 않는 것을 말합니다."},{term:"각하",easy:"절차 요건이 맞지 않아 내용 판단 없이 끝내는 결정",detail:"소송 요건이나 신청 형식이 갖춰지지 않아 본안 판단을 하지 않는 결정입니다."},{term:"원고",easy:"민사소송을 먼저 제기한 사람",detail:"법원에 권리 보호를 요청하며 소송을 제기한 당사자입니다."},{term:"피고",easy:"소송을 제기당한 사람",detail:"원고의 청구에 대해 방어하는 상대방 당사자입니다."},{term:"항소",easy:"1심 판결에 불복해 상급법원에 다시 판단을 요청하는 절차",detail:"정해진 기간 안에 1심 판결의 취소나 변경을 요청하는 불복 절차입니다."}];
-function LegalTermsPage(){const[menuOpen,setMenuOpen]=useState(false);const[keyword,setKeyword]=useState("");const filtered=useMemo(()=>terms.filter((item)=>`${item.term} ${item.easy} ${item.detail}`.includes(keyword.trim())),[keyword]);return <div className="app"><Header onMenuOpen={()=>setMenuOpen(true)}/><HamburgerMenu isOpen={menuOpen} onClose={()=>setMenuOpen(false)}/><main className="simple-page"><div className="content-container"><div className="simple-page-heading"><span><FiBookOpen/></span><div><h1>법률용어</h1><p>어려운 법률 용어를 쉬운 말로 확인하세요.</p></div></div><div className="term-search"><FiSearch/><input value={keyword} onChange={(e)=>setKeyword(e.target.value)} placeholder="궁금한 법률용어를 검색하세요"/></div><section className="term-grid">{filtered.map((item)=><article className="term-card" key={item.term}><span>법률용어</span><h2>{item.term}</h2><strong>{item.easy}</strong><p>{item.detail}</p></article>)}</section></div></main></div>}
-export default LegalTermsPage;

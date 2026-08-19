@@ -1,8 +1,0 @@
-import "../styles/court-map.css";
-import { useMemo, useState } from "react";
-import { FiMapPin, FiNavigation, FiSearch } from "react-icons/fi";
-import Header from "../components/Header.jsx";
-import HamburgerMenu from "../components/HamburgerMenu.jsx";
-const courts=[{name:"서울중앙지방법원",address:"서울특별시 서초구 서초중앙로 157",phone:"02-530-1114",region:"서울"},{name:"서울남부지방법원",address:"서울특별시 양천구 신월로 386",phone:"02-2192-1114",region:"서울"},{name:"고양지원",address:"경기도 고양시 일산동구 장백로 209",phone:"031-920-6114",region:"경기"}];
-function CourtMapPage(){const[menuOpen,setMenuOpen]=useState(false);const[keyword,setKeyword]=useState("");const filtered=useMemo(()=>courts.filter((item)=>`${item.name} ${item.address} ${item.region}`.includes(keyword.trim())),[keyword]);return <div className="app"><Header onMenuOpen={()=>setMenuOpen(true)}/><HamburgerMenu isOpen={menuOpen} onClose={()=>setMenuOpen(false)}/><main className="simple-page"><div className="content-container"><div className="simple-page-heading"><span><FiMapPin/></span><div><h1>법원 찾기</h1><p>지역이나 법원 이름으로 가까운 법원을 찾으세요.</p></div></div><div className="court-layout"><section><div className="term-search"><FiSearch/><input value={keyword} onChange={(e)=>setKeyword(e.target.value)} placeholder="예: 서울중앙지방법원, 고양시"/></div><div className="court-list">{filtered.map((court)=><article className="court-card" key={court.name}><div><span>{court.region}</span><h2>{court.name}</h2><p>{court.address}</p><small>{court.phone}</small></div><button type="button"><FiNavigation/> 길찾기</button></article>)}</div></section><div className="map-placeholder"><FiMapPin/><strong>지도 API 연결 예정</strong><p>현재는 법원 목록과 주소 검색 기능을 먼저 구현했습니다.</p></div></div></div></main></div>}
-export default CourtMapPage;

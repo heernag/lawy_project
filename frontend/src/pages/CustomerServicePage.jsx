@@ -1,7 +1,0 @@
-import "../styles/customer-service.css";
-import { useState } from "react";
-import { FiHeadphones, FiMail, FiPhone } from "react-icons/fi";
-import Header from "../components/Header.jsx";
-import HamburgerMenu from "../components/HamburgerMenu.jsx";
-function CustomerServicePage(){const[menuOpen,setMenuOpen]=useState(false);return <div className="app"><Header onMenuOpen={()=>setMenuOpen(true)}/><HamburgerMenu isOpen={menuOpen} onClose={()=>setMenuOpen(false)}/><main className="simple-page"><div className="content-container"><div className="simple-page-heading"><span><FiHeadphones/></span><div><h1>고객센터</h1><p>서비스 이용 중 불편한 점을 문의하세요.</p></div></div><div className="support-grid"><section className="support-info-card"><FiPhone/><h2>전화 문의</h2><strong>02-0000-0000</strong><p>평일 09:00~18:00</p></section><section className="support-info-card"><FiMail/><h2>이메일 문의</h2><strong>help@casefinder.kr</strong><p>접수 순서대로 답변합니다.</p></section></div><form className="inquiry-card" onSubmit={(e)=>e.preventDefault()}><h2>1:1 문의하기</h2><div className="form-grid"><label>문의 유형<select><option>서비스 이용</option><option>오류 신고</option><option>기타</option></select></label><label>이메일<input type="email" placeholder="example@email.com"/></label></div><label>제목<input type="text" placeholder="문의 제목을 입력하세요"/></label><label>문의 내용<textarea rows="7" placeholder="문의 내용을 자세히 입력해주세요"/></label><button type="submit">문의 접수</button></form></div></main></div>}
-export default CustomerServicePage;
