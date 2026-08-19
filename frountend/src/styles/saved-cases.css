@@ -1,0 +1,12 @@
+/* 저장한 판례 페이지 */
+
+.compact-case-item{display:flex;align-items:center;border-bottom:1px solid #edf1f6}
+.compact-case-item:last-child{border-bottom:0}
+.compact-case-item>a{min-width:0;display:grid;grid-template-columns:80px 1fr 20px;align-items:center;gap:16px;flex:1;padding:22px}
+.compact-case-item h2,.recent-item h2,.community-post h2{margin:0 0 6px;color:var(--navy);font-size:16px}
+.compact-case-item p,.recent-item p,.community-post p{margin:0;color:var(--sub-text);font-size:13px}
+.compact-case-item>button{margin-right:22px;border:0;color:#8b96a8;background:transparent}
+@media (max-width:820px) {
+.compact-case-item>a{grid-template-columns:70px 1fr 18px;padding:17px}
+.compact-case-item>button{margin-right:12px}
+}
